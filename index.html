@@ -5,67 +5,86 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>TTX — 3D SQL Environment Explorer</title>
   <style>
-    :root {
+    :root{
       --bg:#0b0f14; --panel:#0e141c; --accent:#f2c200; --muted:#9aa4af; --border:#223; --text:#e6e6e6;
       --sidebar-w:560px;
-    }
-    html, body { margin:0; height:100%; background:var(--bg); color:var(--text); font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; }
-    #topbar { position:fixed; top:0; left:0; right:0; background:linear-gradient(90deg, #121821, #121821 70%, #1a2130);
-              padding:10px; display:flex; gap:8px; align-items:center; z-index:10; border-bottom:1px solid var(--border); }
-    .brand { display:flex; align-items:center; gap:10px; padding-right:12px; border-right:1px solid var(--border); }
-    .title { font-weight:700; letter-spacing:0.3px; }
-    #topbar input, #topbar button, #topbar select { background:var(--bg); color:var(--text); border:1px solid var(--border); padding:6px 8px; border-radius:6px; }
+      html, body {
+  overflow: hidden;
+}
+@keyframes floatAway {
+  0%   { opacity:1; transform:translateY(0); filter:none; }
+  70%  { opacity:1; transform:translateY(-40px); filter:none; }
+  100% { opacity:0; transform:translateY(-80px); filter:blur(1px); height:0; margin:0; padding:0; }
+}
+.chat-msg.fade {
+  animation: floatAway 7s cubic-bezier(.22,.61,.36,1) forwards;
+  will-change: transform, opacity, filter;
+}
 
-    /* canvas and sidebar with collapsible behavior */
-    #canvas{ position:absolute; top:52px; bottom:0; left:0; right:var(--sidebar-w); transition:right .25s ease; }
-    #sidebar{
-      position:fixed; top:52px; right:0; bottom:0; width:var(--sidebar-w);
-      background:var(--panel); border-left:1px solid var(--border);
-      display:grid; grid-template-rows:auto 1fr auto;
-      transform:translateX(0); transition:transform .25s ease;
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .chat-msg.fade { animation-duration: 1ms; }
+}
     }
-    body.sidebar-collapsed #sidebar{ transform:translateX(var(--sidebar-w)); }
-    body.sidebar-collapsed #canvas{ right:0; }
+    html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    #topbar{position:fixed;top:0;left:0;right:0;background:linear-gradient(90deg,#121821,#121821 70%,#1a2130);padding:10px;display:flex;gap:8px;align-items:center;z-index:10;border-bottom:1px solid var(--border)}
+    .brand{display:flex;align-items:center;gap:10px;padding-right:12px;border-right:1px solid var(--border)}
+    .title{font-weight:700;letter-spacing:.3px}
+    #topbar input,#topbar button,#topbar select{background:var(--bg);color:var(--text);border:1px solid var(--border);padding:6px 8px;border-radius:6px}
 
-    /* edge handle */
-    #toggleHandle{
-      position:fixed; top:50%; right:var(--sidebar-w); transform:translateY(-50%);
-      background:var(--panel); color:var(--text);
-      border:1px solid var(--border); border-right:none;
-      padding:6px 8px; border-radius:8px 0 0 8px; cursor:pointer; z-index:11; line-height:1;
-    }
-    body.sidebar-collapsed #toggleHandle{
-      right:0; border-right:1px solid var(--border); border-left:none; border-radius:0 8px 8px 0;
-    }
+    /* canvas + collapsible sidebar */
+    #canvas{position:absolute;top:52px;bottom:0;left:0;right:var(--sidebar-w);transition:right .25s ease}
+    /* replace current #sidebar line */
+#sidebar { position:fixed; top:52px; right:0; bottom:0; width:var(--sidebar-w);
+  background:var(--panel); border-left:1px solid var(--border);
+  display:grid; grid-template-rows:1fr auto;  /* <-- grow inspector */
+  transform:translateX(0); transition:transform .25s ease;
+}
 
-    #inspector { padding:12px; border-bottom:1px solid var(--border); }
-    #details { color:var(--muted); font-size:13px; }
-    #chat { display:grid; grid-template-rows:1fr auto; height:100%; }
-    #chatlog { padding:12px; overflow:auto; }
-    .chat-msg { margin-bottom:10px; }
-    .chat-role { font-size:12px; color:var(--muted); }
-    .chat-bubble { background:#0b0f14; border:1px solid var(--border); padding:8px; border-radius:8px; margin-top:4px; white-space:pre-wrap; }
-    #chatctl { padding:10px; border-top:1px solid var(--border); display:grid; grid-template-columns:1fr auto; gap:8px; }
-    #prompt { background:#0b0f14; color:var(--text); border:1px solid var(--border); border-radius:8px; padding:8px; min-height:56px; }
-    #send { background:var(--accent); color:#111; border:0; padding:10px 14px; border-radius:8px; font-weight:700; }
-    .muted { color:var(--muted); }
-    .pill { display:inline-block; padding:2px 6px; border-radius:999px; border:1px solid var(--border); font-size:12px; margin-right:6px; }
-    .legend .pill { margin-top:4px; }
+/* ensure the inspector can scroll */
+#inspector { padding:12px; border-bottom:1px solid var(--border); overflow:auto; min-height:0; }
+
+/* keep chat fixed at the bottom, no change needed */
+#chat { display:grid; grid-template-rows:1fr auto; height:100%; }
+
+/* better wrapping for long SQL */
+#details pre { overflow-wrap:anywhere; white-space:pre-wrap; }
+ auto;transform:translateX(0);transition:transform .25s ease}
+    body.sidebar-collapsed #sidebar{transform:translateX(var(--sidebar-w))}
+    body.sidebar-collapsed #canvas{right:0}
+
+    #toggleHandle{position:fixed;top:50%;right:var(--sidebar-w);transform:translateY(-50%);background:var(--panel);color:var(--text);border:1px solid var(--border);border-right:none;padding:6px 8px;border-radius:8px 0 0 8px;cursor:pointer;z-index:11;line-height:1}
+    body.sidebar-collapsed #toggleHandle{right:0;border-right:1px solid var(--border);border-left:none;border-radius:0 8px 8px 0}
+
+    #inspector{padding:12px;border-bottom:1px solid var(--border)}
+    #details{color:var(--muted);font-size:13px}
+    #chat{display:grid;grid-template-rows:1fr auto;height:100%}
+    #chatlog{padding:12px;overflow:auto}
+    .chat-msg{margin-bottom:10px}
+    .chat-role{font-size:12px;color:var(--muted)}
+    .chat-bubble{background:#0b0f14;border:1px solid var(--border);padding:8px;border-radius:8px;margin-top:4px;white-space:pre-wrap}
+    #chatctl{padding:10px;border-top:1px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:8px}
+    #prompt{background:#0b0f14;color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px;min-height:56px}
+    #send{background:var(--accent);color:#111;border:0;padding:10px 14px;border-radius:8px;font-weight:700}
+    .muted{color:var(--muted)}
+    .pill{display:inline-block;padding:2px 6px;border-radius:999px;border:1px solid var(--border);font-size:12px;margin-right:6px}
+    .legend .pill{margin-top:4px}
   </style>
 </head>
 <body>
   <div id="topbar">
     <div class="brand">
-      <img src="TTX_Company-Logo.wine.png" alt="TTX Logo"
-           style="height:32px;width:auto;object-fit:contain;vertical-align:middle;">
+      <img src="TTX_Company-Logo.wine.png" alt="TTX Logo" style="height:32px;width:auto;object-fit:contain;vertical-align:middle;">
       <span class="title">3D SQL Environment Explorer</span>
     </div>
-    <input id="search" type="text" placeholder="Search node by name/id..." />
+    <!-- Autocomplete search -->
+    <input id="search" type="text" list="nodeList" placeholder="Search node by name/id..." autocomplete="off" />
+    <datalist id="nodeList"></datalist>
     <button id="btnFocus">Focus</button>
-    <label>Radius <input id="radius" type="number" min="1" max="6" value="2" style="width:64px"></label>
+    <label>Radius <input id="radius" type="number" min="0" max="25" value="2" style="width:64px"></label>
     <input id="file" type="file" accept=".json,application/json" />
     <button id="btnDemo">Load demo</button>
-    <span class="muted">JSON: {"nodes":[{id,name,type,health_score}], "links":[{source,target,kind}]}</span>
+    <span class="muted">HDSTTX</span>
   </div>
 
   <div id="canvas"></div>
@@ -74,44 +93,56 @@
     <div id="inspector">
       <div class="legend">
         <span class="pill">Size = degree</span>
-        <span class="pill">Color = health</span>
-        <span class="pill">Links = joins/refs</span>
+        <span class="pill">Color = type</span>
+        <span class="pill">Links = deps</span>
       </div>
       <h3 id="title" style="margin:10px 0 6px 0;">Details</h3>
-      <div id="details" class="muted">Select a node to view properties.</div>
+      <div id="details" class="muted">Load a JSON model or the demo. Select a node to view SQL.</div>
     </div>
     <div id="chat">
       <div id="chatlog"></div>
       <div id="chatctl">
-        <textarea id="prompt" placeholder="Ask about the model. Try: help, focus n5, neighbors n5 2, shortest n5 n17, search customer"></textarea>
+        <textarea id="prompt" placeholder='Commands: help | focus <id> | neighbors <id> [r] | shortest <src> <dst> | search <text>'></textarea>
         <button id="send">Ask</button>
       </div>
     </div>
   </div>
 
-  <!-- edge toggle handle -->
   <button id="toggleHandle" aria-label="Toggle sidebar">◂</button>
 
   <script src="https://unpkg.com/three@0.157.0/build/three.min.js"></script>
   <script src="https://unpkg.com/3d-force-graph@1.73.3/dist/3d-force-graph.min.js"></script>
 
+  <!-- Inline demo data so "Load demo" always works -->
+  <script type="application/json" id="ttx-demo">
+  {
+    "nodes":[
+      {"id":"dbo.TMS_BOM","name":"dbo.TMS_BOM","type":"Table","sql":"SELECT * FROM dbo.TMS_BOM;"},
+      {"id":"dbo.CarRequest","name":"dbo.CarRequest","type":"Table","sql":"SELECT * FROM dbo.CarRequest;"},
+      {"id":"dbo.GetOpenReqs","name":"dbo.GetOpenReqs","type":"Proc","sql":"CREATE PROC dbo.GetOpenReqs AS SELECT * FROM dbo.CarRequest WHERE Status='Open';"},
+      {"id":"vw_ActiveCars","name":"vw_ActiveCars","type":"View","sql":"CREATE VIEW vw_ActiveCars AS SELECT * FROM dbo.TMS_BOM WHERE Active=1;"}
+    ],
+    "links":[
+      {"source":"dbo.GetOpenReqs","target":"dbo.CarRequest","kind":"DEPENDS_ON"},
+      {"source":"vw_ActiveCars","target":"dbo.TMS_BOM","kind":"DEPENDS_ON"},
+      {"source":"dbo.CarRequest","target":"dbo.TMS_BOM","kind":"JOINS"}
+    ]
+  }
+  </script>
+
   <script>
+    // ------- state -------
     let fullData = { nodes: [], links: [] };
     let currentRoot = null;
+    let searchIndex = [];
 
+    // ------- graph -------
     const g = ForceGraph3D()(document.getElementById('canvas'))
       .backgroundColor('#0b0f14')
-      .nodeAutoColorBy('type')
-      .nodeLabel(n => `${n.name || n.id}\n${n.type||''} | health=${n.health_score ?? 'NA'}`)
-      .nodeThreeObject(node => {
-        const size = 4 + Math.min(20, (node.degree || 0));
-        const color = healthColor(node.health_score);
-        const obj = new THREE.Mesh(new THREE.SphereGeometry(size, 16, 16),
-                                   new THREE.MeshLambertMaterial({ color }));
-        obj.userData = { node };
-        return obj;
-      })
-      .linkColor(l => l.kind === 'JOIN' ? '#5dade2' : '#888')
+      .nodeAutoColorBy('type')                 // color by object type
+      .nodeLabel(n => `${n.name || n.id}`)     // name only
+      .nodeVal(n => 1 + (n.degree || 0))       // size by degree
+      .linkColor(() => '#888')
       .linkOpacity(0.6)
       .enableNodeDrag(false)
       .showNavInfo(false)
@@ -127,207 +158,186 @@
     dir.position.set(80, 80, 80);
     scene.add(dir);
 
-    // --- Sidebar toggle logic ---
+    // ------- sidebar toggle -------
     const handle = document.getElementById('toggleHandle');
-    const key = 'sidebar-collapsed';
-
-    function fitGraph(){ try { g.zoomToFit(600, 60); } catch(_) {} }
-    function setHandleIcon(){
-      handle.textContent = document.body.classList.contains('sidebar-collapsed') ? '▸' : '◂';
-    }
-    // restore state on load
-    if (localStorage.getItem(key) === '1') document.body.classList.add('sidebar-collapsed');
+    const collapseKey = 'sidebar-collapsed';
+    const setHandleIcon = () => handle.textContent = document.body.classList.contains('sidebar-collapsed') ? '▸' : '◂';
+    const fitGraph = () => { try { g.zoomToFit(600, 60); } catch(_) {} };
+    if (localStorage.getItem(collapseKey) === '1') document.body.classList.add('sidebar-collapsed');
     setHandleIcon();
-    setTimeout(() => { window.dispatchEvent(new Event('resize')); fitGraph(); }, 50);
-
+    setTimeout(() => { window.dispatchEvent(new Event('resize')); fitGraph(); }, 60);
     handle.addEventListener('click', () => {
       document.body.classList.toggle('sidebar-collapsed');
-      localStorage.setItem(key, document.body.classList.contains('sidebar-collapsed') ? '1' : '0');
+      localStorage.setItem(collapseKey, document.body.classList.contains('sidebar-collapsed') ? '1':'0');
       setHandleIcon();
       setTimeout(() => { window.dispatchEvent(new Event('resize')); fitGraph(); }, 260);
     });
-    // ----------------------------
 
-    document.getElementById('btnDemo').onclick = () => {
-      const demo = buildDemo();
-      loadGraph(demo);
-      renderNeighborhood(demo.nodes[0]?.id, getRadius());
-      logSys(`Demo loaded: ${demo.nodes.length} nodes, ${demo.links.length} links.`);
-    };
+    // ------- file loader -------
     document.getElementById('file').addEventListener('change', async (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
+      const file = e.target.files[0]; if (!file) return;
       try {
         const text = await file.text();
         const json = JSON.parse(text);
         loadGraph(json);
-        renderNeighborhood(json.nodes?.[0]?.id, getRadius());
+        afterLoad();
         logSys(`Model loaded: ${fullData.nodes.length} nodes, ${fullData.links.length} links.`);
       } catch (err) {
-        console.error('Invalid JSON', err);
-        logSys('Invalid JSON file.');
+        console.error(err); logSys('Invalid JSON file.');
       }
     });
-    document.getElementById('btnFocus').onclick = () => {
-      const q = document.getElementById('search').value.trim().toLowerCase();
-      if (!q) return;
-      const node = fullData.nodes.find(n => (n.name || n.id).toLowerCase().includes(q));
-      if (node) {
-        currentRoot = node.id;
-        showDetails(node);
-        renderNeighborhood(node.id, getRadius());
-        logSys(`Focused ${node.id}`);
-      } else {
-        logSys(`No match for "${q}"`);
-      }
-    };
-    document.getElementById('radius').addEventListener('input', () => {
-      renderNeighborhood(currentRoot || fullData.nodes[0]?.id, getRadius());
-    });
-    document.getElementById('send').onclick = onAsk;
 
-    function onAsk(){
-      const prompt = document.getElementById('prompt').value.trim();
-      if (!prompt) return;
-      addChat('you', prompt);
-      handleLocalQuery(prompt);
-      document.getElementById('prompt').value = '';
+    // ------- demo loader (single definition) -------
+    function loadTTXDemo(){
+      const tag = document.getElementById('ttx-demo');
+      if (!tag){ logSys('Embedded demo not found.'); return; }
+      const json = JSON.parse(tag.textContent);
+      loadGraph(json);
+      afterLoad();
+      logSys(`TTX demo loaded: ${fullData.nodes.length} nodes, ${fullData.links.length} links.`);
+    }
+    document.getElementById('btnDemo').onclick = loadTTXDemo;
+
+    // ------- search -------
+    const searchEl = document.getElementById('search');
+    document.getElementById('btnFocus').onclick = focusFromInput;
+    searchEl.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); focusFromInput(); } });
+    function focusFromInput(){
+      const q = searchEl.value.trim().toLowerCase();
+      if (!q || !fullData.nodes.length) return;
+      let node = fullData.nodes.find(n => String(n.id).toLowerCase() === q || String(n.name||'').toLowerCase() === q);
+      if (!node) node = fullData.nodes.find(n => String(n.name||'').toLowerCase().includes(q));
+      if (!node) node = fullData.nodes.find(n => String(n.id).toLowerCase().includes(q));
+      if (node){ currentRoot = node.id; showDetails(node); renderNeighborhood(node.id, getRadius()); logSys(`Focused ${node.id}`); }
+      else { logSys(`No match for "${q}"`); }
+    }
+    function buildSearchIndex(nodes){
+      const seen = new Set();
+      searchIndex = nodes.map(n => ({
+        id: String(n.id),
+        name: String(n.name || n.id),
+        label: `${n.name || n.id}${n.type ? ' · ' + n.type : ''}`
+      })).filter(x => { const k = x.name.toLowerCase(); if (seen.has(k)) return false; seen.add(k); return true; });
+    }
+    function populateDatalist(index){
+      const dl = document.getElementById('nodeList'); dl.innerHTML = '';
+      const max = 5000;
+      for (let i=0; i<index.length && i<max; i++){
+        const o = document.createElement('option');
+        o.value = index[i].name; o.label = index[i].label; dl.appendChild(o);
+      }
     }
 
+    // ------- chat commands -------
+    document.getElementById('send').onclick = onAsk;
+    function onAsk(){
+      const p = document.getElementById('prompt').value.trim();
+      if (!p) return;
+      addChat('you', p);
+      handleLocalQuery(p);
+      document.getElementById('prompt').value = '';
+    }
     function handleLocalQuery(q){
-      const [cmd, ...rest] = q.split(/\s+/);
-      const arg = rest.join(' ');
+      const [cmd, ...rest] = q.split(/\s+/); const arg = rest.join(' ');
       switch ((cmd||'').toLowerCase()){
         case 'help':
-          addChat('assistant',
-            "Commands:\n- focus <nodeId>\n- neighbors <nodeId> [radius]\n- shortest <src> <dst>\n- search <text>\n- radius <n>\n- types <Table|View|Proc>"
-          );
+          addChat('assistant',"Commands:\n- focus <nodeId>\n- neighbors <nodeId> [radius]\n- shortest <src> <dst>\n- search <text>\n- radius <n>\n- types <Table|View|Proc>");
           break;
         case 'focus': {
-          const id = rest[0];
-          const node = fullData.nodes.find(n => n.id === id);
-          if (!node) { addChat('assistant', `No node ${id}`); return; }
-          currentRoot = node.id;
-          showDetails(node);
-          renderNeighborhood(node.id, getRadius());
-          addChat('assistant', `Focused ${id}`);
-        } break;
-        case 'neighbors': {
-          const id = rest[0];
-          const r = parseInt(rest[1] || '2', 10);
-          if (!id) { addChat('assistant', 'Usage: neighbors <nodeId> [radius]'); return; }
-          const node = fullData.nodes.find(n => n.id === id);
-          if (!node) { addChat('assistant', `No node ${id}`); return; }
-          renderNeighborhood(id, r);
-          const adj = buildIndex(fullData);
-          const nb = Array.from(adj.get(id) || []);
-          addChat('assistant', `Neighbors of ${id} (1 hop): ${nb.join(', ') || '(none)'}`);
-        } break;
-        case 'shortest': {
-          const [src, dst] = rest;
-          if (!src || !dst) { addChat('assistant', 'Usage: shortest <src> <dst>'); return; }
-          const path = shortestPath(src, dst, fullData);
-          if (!path) { addChat('assistant', `No path from ${src} to ${dst}`); return; }
-          highlightPath(path);
-          addChat('assistant', `Shortest path (${path.length-1} hops): ${path.join(' -> ')}`);
+          const id = rest[0]; const node = fullData.nodes.find(n => n.id === id);
+          if (!node){ addChat('assistant',`No node ${id}`); return; }
+          currentRoot = node.id; showDetails(node); renderNeighborhood(node.id, getRadius()); addChat('assistant',`Focused ${id}`);
         } break;
         case 'search': {
           const txt = arg.toLowerCase();
           const hits = fullData.nodes.filter(n => (n.name||n.id).toLowerCase().includes(txt)).slice(0,20);
-          addChat('assistant', hits.length ? `Matches (${hits.length}): ${hits.map(h => h.id).join(', ')}` : 'No matches');
+          addChat('assistant', hits.length ? `Matches (${hits.length}): ${hits.map(h=>h.id).join(', ')}` : 'No matches');
+        } break;
+        case 'neighbors': {
+          const id = rest[0]; const r = parseInt(rest[1]||'2',10);
+          if (!id){ addChat('assistant','Usage: neighbors <nodeId> [radius]'); return; }
+          const node = fullData.nodes.find(n => n.id === id);
+          if (!node){ addChat('assistant',`No node ${id}`); return; }
+          renderNeighborhood(id, r);
+          const adj = buildIndex(fullData);
+          const nb = Array.from(adj.get(id)||[]);
+          addChat('assistant', `Neighbors of ${id} (1 hop): ${nb.join(', ') || '(none)'}`);
+        } break;
+        case 'shortest': {
+          const [src,dst] = rest;
+          if (!src||!dst){ addChat('assistant','Usage: shortest <src> <dst>'); return; }
+          const path = shortestPath(src,dst,fullData);
+          if (!path){ addChat('assistant',`No path from ${src} to ${dst}`); return; }
+          highlightPath(path); addChat('assistant',`Shortest path (${path.length-1} hops): ${path.join(' -> ')}`);
         } break;
         case 'radius': {
-          const n = parseInt(rest[0] || '2', 10);
+          const n = parseInt(rest[0]||'2',10);
           document.getElementById('radius').value = String(n);
           renderNeighborhood(currentRoot || fullData.nodes[0]?.id, n);
-          addChat('assistant', `Radius set to ${n}`);
+          addChat('assistant',`Radius set to ${n}`);
         } break;
         case 'types': {
           const want = new Set(rest.join('').split('|').map(s=>s.trim()));
           const hits = fullData.nodes.filter(n => want.has((n.type||'').toString()));
           addChat('assistant', hits.length ? `Types ${Array.from(want).join('|')}: ${hits.slice(0,20).map(h=>h.id).join(', ')}${hits.length>20?' …':''}` : 'No matches');
         } break;
-        default:
-          addChat('assistant', 'Unknown command. Type "help".');
+        default: addChat('assistant','Unknown command. Type "help".');
       }
     }
 
-    async function askLLM(prompt, graphSummary){
-      return { answer: "LLM integration not configured. Wire this to an internal /api/agent that calls your GPT endpoint." };
-    }
-
+    // ------- graph helpers -------
     function getRadius(){ return parseInt(document.getElementById('radius').value, 10) || 2; }
-    function healthColor(h) {
-      if (typeof h !== 'number') return '#6c757d';
-      if (h >= 80) return '#1b4332';
-      if (h >= 50) return '#997a00';
-      return '#5d1b1b';
-    }
-    function computeDegree(data) {
-      const deg = new Map();
-      data.nodes.forEach(n => deg.set(n.id, 0));
+    function computeDegree(data){
+      const deg = new Map(); data.nodes.forEach(n => deg.set(n.id, 0));
       data.links.forEach(l => {
         const s = typeof l.source === 'object' ? l.source.id : l.source;
         const t = typeof l.target === 'object' ? l.target.id : l.target;
-        deg.set(s, (deg.get(s) || 0) + 1);
-        deg.set(t, (deg.get(t) || 0) + 1);
+        deg.set(s, (deg.get(s)||0)+1); deg.set(t, (deg.get(t)||0)+1);
       });
       data.nodes.forEach(n => n.degree = deg.get(n.id) || 0);
     }
-    function buildIndex(data) {
+    function buildIndex(data){
       const adj = new Map();
       data.nodes.forEach(n => adj.set(n.id, new Set()));
       data.links.forEach(l => {
         const s = typeof l.source === 'object' ? l.source.id : l.source;
         const t = typeof l.target === 'object' ? l.target.id : l.target;
-        adj.get(s)?.add(t);
-        adj.get(t)?.add(s);
+        adj.get(s)?.add(t); adj.get(t)?.add(s);
       });
       return adj;
     }
-    function bfsSubgraph(startId, radius, data) {
+    function bfsSubgraph(startId, radius, data){
       if (!startId) return data;
       const adj = buildIndex(data);
-      const visited = new Set([startId]);
-      const q = [[startId, 0]];
-      while (q.length) {
-        const [u, d] = q.shift();
+      const vis = new Set([startId]);
+      const q = [[startId,0]];
+      while(q.length){
+        const [u,d] = q.shift();
         if (d === radius) continue;
-        for (const v of (adj.get(u) || [])) {
-          if (!visited.has(v)) {
-            visited.add(v);
-            q.push([v, d + 1]);
-          }
-        }
+        for (const v of (adj.get(u)||[])){ if (!vis.has(v)){ vis.add(v); q.push([v,d+1]); } }
       }
-      const nodes = data.nodes.filter(n => visited.has(n.id));
-      const nodeSet = new Set(nodes.map(n => n.id));
+      const nodes = data.nodes.filter(n => vis.has(n.id));
+      const S = new Set(nodes.map(n => n.id));
       const links = data.links.filter(l => {
         const s = typeof l.source === 'object' ? l.source.id : l.source;
         const t = typeof l.target === 'object' ? l.target.id : l.target;
-        return nodeSet.has(s) && nodeSet.has(t);
+        return S.has(s) && S.has(t);
       });
       return { nodes, links };
     }
-    function renderNeighborhood(rootId, radius) {
+    function renderNeighborhood(rootId, radius){
       const sub = bfsSubgraph(rootId || (fullData.nodes[0]?.id), radius, fullData);
       computeDegree(sub);
       g.graphData(sub);
+      setTimeout(() => { try { g.zoomToFit(600, 60); } catch(_) {} }, 60);
     }
-    function shortestPath(src, dst, data){
+    function shortestPath(src,dst,data){
       const adj = buildIndex(data);
-      const q = [[src]];
-      const seen = new Set([src]);
-      while (q.length){
-        const path = q.shift();
-        const last = path[path.length-1];
+      const q = [[src]]; const seen = new Set([src]);
+      while(q.length){
+        const path = q.shift(), last = path[path.length-1];
         if (last === dst) return path;
-        for (const v of (adj.get(last) || [])){
-          if (!seen.has(v)){
-            seen.add(v);
-            q.push(path.concat(v));
-          }
-        }
+        for (const v of (adj.get(last)||[])){ if (!seen.has(v)){ seen.add(v); q.push(path.concat(v)); } }
       }
       return null;
     }
@@ -341,46 +351,27 @@
       const nodes = fullData.nodes.filter(n => set.has(n.id));
       g.graphData({nodes, links});
     }
-    function showDetails(n) {
+
+    // ------- details pane -------
+    function showDetails(n){
       const el = document.getElementById('details');
-      const id = n.id;
-      const name = n.name || id;
+      const name = n.name || n.id;
       const type = n.type || 'Object';
-      const hs = n.health_score ?? 'NA';
-      const deg = n.degree ?? 0;
+      const deg  = n.degree ?? 0;
+      const sql  = n.sql || 'No SQL available.';
       el.innerHTML = `
         <div><strong>${escapeHtml(name)}</strong></div>
-        <div class="muted">${escapeHtml(type)}</div>
-        <div>Health score: <strong>${hs}</strong></div>
-        <div>Degree: <strong>${deg}</strong></div>
-        <div style="margin-top:8px">
-          <div class="muted">Properties</div>
-          <pre style="white-space:pre-wrap;background:#0b0f14;border:1px solid var(--border);border-radius:6px;padding:8px;color:var(--muted)">${escapeHtml(JSON.stringify(n, null, 2))}</pre>
-        </div>
+        <div class="muted">${escapeHtml(type)} · degree ${deg}</div>
+        <div style="margin-top:8px" class="muted">SQL</div>
+        <pre style="white-space:pre-wrap;background:#0b0f14;border:1px solid var(--border);border-radius:6px;padding:8px;max-height:42vh;overflow:auto">${escapeHtml(sql)}</pre>
+        <div style="margin-top:8px" class="muted">Properties</div>
+        <pre style="white-space:pre-wrap;background:#0b0f14;border:1px solid var(--border);border-radius:6px;padding:8px;max-height:22vh;overflow:auto">${escapeHtml(JSON.stringify({id:n.id,type:n.type,degree:n.degree}, null, 2))}</pre>
       `;
       document.getElementById('title').textContent = name;
     }
-    function escapeHtml(s){ return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
-    function buildDemo(){
-      return {
-        nodes: [
-          { id:"n1", name:"n1", type:"Table", health_score:85 },
-          { id:"n2", name:"n2", type:"View", health_score:70 },
-          { id:"n3", name:"n3", type:"Proc", health_score:50 },
-          { id:"n4", name:"n4", type:"Table", health_score:90 },
-          { id:"n5", name:"n5", type:"Table", health_score:66 },
-          { id:"n6", name:"n6", type:"View", health_score:72 }
-        ],
-        links: [
-          { source:"n2", target:"n1", kind:"DEPENDS_ON" },
-          { source:"n2", target:"n4", kind:"DEPENDS_ON" },
-          { source:"n3", target:"n2", kind:"DEPENDS_ON" },
-          { source:"n1", target:"n5", kind:"JOIN" },
-          { source:"n4", target:"n6", kind:"DEPENDS_ON" },
-          { source:"n6", target:"n5", kind:"DEPENDS_ON" }
-        ]
-      };
-    }
+    function escapeHtml(s){ return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+    // ------- data plumbing -------
     function normalizeLinks(json){
       json.links = (json.links || []).map(l => ({
         source: typeof l.source === 'object' ? l.source.id : l.source,
@@ -389,35 +380,55 @@
       }));
       return json;
     }
-    function loadGraph(json) {
-      if (!json || !Array.isArray(json.nodes) || !Array.isArray(json.links)) {
-        logSys('Invalid model JSON structure.');
-        return;
+    function loadGraph(json){
+      if (!json || !Array.isArray(json.nodes) || !Array.isArray(json.links)){
+        logSys('Invalid model JSON structure.'); return;
       }
       fullData = normalizeLinks(json);
       computeDegree(fullData);
     }
-    function logSys(msg){ addChat('system', msg); }
-    function addChat(role, content){
-      const wrap = document.createElement('div');
-      wrap.className = 'chat-msg';
-      const r = document.createElement('div');
-      r.className = 'chat-role';
-      r.textContent = role;
-      const b = document.createElement('div');
-      b.className = 'chat-bubble';
-      b.textContent = content;
-      wrap.appendChild(r); wrap.appendChild(b);
-      const log = document.getElementById('chatlog');
-      log.appendChild(wrap);
-      log.scrollTop = log.scrollHeight;
+    function afterLoad(){
+      buildSearchIndex(fullData.nodes);
+      populateDatalist(searchIndex);
+      const startId = fullData.nodes[0]?.id;
+      if (startId) renderNeighborhood(startId, getRadius());
     }
-    (function init(){
-      const demo = buildDemo();
-      loadGraph(demo);
-      renderNeighborhood(demo.nodes[0].id, getRadius());
-      logSys('Type "help" for local graph commands. LLM integration is stubbed and can be connected to an internal endpoint.');
-    })();
+
+    // ------- chat log -------
+function logSys(msg){
+  const el = addChat('system', msg);
+  el.classList.add('fade');          // start fade animation
+  setTimeout(() => el.remove(), 7000); // remove after 7s
+}
+
+function addChat(role, content){
+  const wrap = document.createElement('div');
+  wrap.className = 'chat-msg';
+  const r = document.createElement('div');
+  r.className = 'chat-role';
+  r.textContent = role;
+  const b = document.createElement('div');
+  b.className = 'chat-bubble';
+  b.textContent = content;
+  wrap.appendChild(r);
+  wrap.appendChild(b);
+  const log = document.getElementById('chatlog');
+  log.appendChild(wrap);
+  log.scrollTop = log.scrollHeight;
+  return wrap; // return element so logSys can fade/remove it
+}
+
+
+    // ------- single init -------
+(function init(){
+  // set default radius 0 on load
+  document.getElementById('radius').value = 0;
+
+  g.graphData({ nodes: [], links: [] });
+  loadTTXDemo();  // demo auto-loads using radius 0
+})();
+
   </script>
 </body>
 </html>
+
