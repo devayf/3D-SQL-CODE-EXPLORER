@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>TTX — SQL Atlas 3D</title>
+  <title>TTX — SQL Neural Explorer</title>
   <style>
     :root{
       --bg:#0b0f14; --panel:#0e141c; --accent:#f2c200; --muted:#9aa4af; --border:#223; --text:#e6e6e6;
@@ -28,7 +28,7 @@
       padding:10px; display:flex; gap:8px; align-items:center; border-bottom:1px solid var(--border);
     }
     .brand{ display:flex; align-items:center; gap:10px; padding-right:12px; border-right:1px solid var(--border) }
-    .title{ font-weight:700; letter-spacing:.3px; font-size:2.0rem; }
+    .title{ font-weight:700; letter-spacing:.3px; font-size:1.8rem; }
     #topbar input,#topbar button,#topbar select{
       background:var(--bg); color:var(--text); border:1px solid var(--border); padding:6px 8px; border-radius:6px;
     }
@@ -37,7 +37,7 @@
     input[type="number"]{ -moz-appearance:textfield }
 
     /* search */
-    .searchwrap{ position:relative; width:400px }
+    .searchwrap{ position:relative; width:350px }
     #search{
       padding-right:28px;
       background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="%239aa4af" viewBox="0 0 24 24"><path d="M9.5 3a6.5 6.5 0 015.2 10.5l4.15 4.15-1.4 1.4-4.15-4.15A6.5 6.5 0 119.5 3zm0 2a4.5 4.5 0 100 9 4.5 4.5 0 000-9z"/></svg>');
@@ -110,7 +110,7 @@ body.sidebar-collapsed #toggleHandle{
   <div id="topbar">
     <div class="brand">
       <img src="TTX_Company-Logo.wine.png" alt="TTX Logo" style="height:85px;width:auto;object-fit:contain;vertical-align:middle;">
-      <span class="title">SQL Atlas 3D</span>
+      <span class="title">SQL Neural Explorer</span>
     </div>
     <div class="searchwrap">
       <input id="search" type="text" placeholder="Search node by name..." autocomplete="on" />
