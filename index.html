@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>TTX — 3D SQL Environment Explorer</title>
+  <title>TTX — SQL Atlas 3D</title>
   <style>
     :root{
       --bg:#0b0f14; --panel:#0e141c; --accent:#f2c200; --muted:#9aa4af; --border:#223; --text:#e6e6e6;
@@ -83,13 +83,20 @@
       padding:8px 10px; border-radius:8px;
     }
     #btnReset:hover{ filter:brightness(1.1); cursor:pointer }
+#btnLabels{
+  position:fixed; left:75px; bottom:12px; z-index:12;
+  background:var(--panel); color:var(--text); border:1px solid var(--border);
+  padding:8px 10px; border-radius:8px;
+}
+#btnLabels:hover{ filter:brightness(1.1); cursor:pointer }
+
   </style>
 </head>
 <body>
   <div id="topbar">
     <div class="brand">
-      <img src="TTX_Company-Logo.wine.png" alt="TTX Logo" style="height:72px;width:auto;object-fit:contain;vertical-align:middle;">
-      <span class="title">3D SQL Environment Explorer</span>
+      <img src="TTX_Company-Logo.wine.png" alt="TTX Logo" style="height:82px;width:auto;object-fit:contain;vertical-align:middle;">
+      <span class="title">SQL Atlas 3D</span>
     </div>
     <div class="searchwrap">
       <input id="search" type="text" placeholder="Search node by name..." autocomplete="on" />
@@ -125,6 +132,7 @@
 
   <button id="toggleHandle" aria-label="Toggle sidebar">◂</button>
   <button id="btnReset" aria-label="Reset view">Reset</button>
+  <button id="btnLabels" aria-label="Toggle labels">Show Object Names</button>
 
   <!-- libs -->
   <script src="https://unpkg.com/three@0.157.0/build/three.min.js"></script>
@@ -3348,6 +3356,7 @@
         renderNeighborhood(node.id, getRadius());
       });
 
+   
     // visual spheres by type
     const colorByType = t => ({ Table:'#4aa3ff', View:'#9b59b6', Proc:'#f1c40f' }[t] || '#9aa4af');
     g.nodeThreeObject(n => {
@@ -3364,13 +3373,78 @@
       .distance(l => 70 + 3 * Math.sqrt((l.source.degree || 0) + (l.target.degree || 0)))
       .strength(0.25);
     g.d3Force('charge').strength(-180);
-
+    
     // lights
     const scene = g.scene();
     scene.add(new THREE.AmbientLight(0xffffff, 0.9));
     const dir = new THREE.DirectionalLight(0xffffff, 0.7);
     dir.position.set(80, 80, 80);
     scene.add(dir);
+     
+     
+ // --- Show/Hide Labels toggle (keeps node colors, uses same hover text) ---
+let labelsOn = false;
+const btnLabels = document.getElementById('btnLabels');
+
+// the hover text function already defines what to show
+const labelFn = n => `${n.name || n.id}`;
+
+// create a simple HTML overlay for labels so it matches tooltip style
+const labelDivs = new Map();
+
+function toggleLabels(on) {
+  labelsOn = on;
+  btnLabels.textContent = on ? 'Hide Object Names' : 'Show Object Names';
+
+  // clear any previous labels
+  labelDivs.forEach(el => el.remove());
+  labelDivs.clear();
+
+  if (on) {
+    const container = g.renderer().domElement.parentElement;
+    g.graphData().nodes.forEach(n => {
+      const el = document.createElement('div');
+      el.textContent = labelFn(n);
+      Object.assign(el.style, {
+        position: 'absolute',
+        color: '#fff',
+        background: 'rgba(20,20,20,0.8)',
+        font: '12px sans-serif',
+        padding: '2px 6px',
+        borderRadius: '4px',
+        pointerEvents: 'none',
+        whiteSpace: 'nowrap',
+        transform: 'translate(-50%,-50%)',
+      });
+      container.appendChild(el);
+      labelDivs.set(n, el);
+    });
+
+    // sync positions on render
+    g.onRenderFrame(() => {
+      const camera = g.camera();
+      const renderer = g.renderer();
+      const width = renderer.domElement.clientWidth;
+      const height = renderer.domElement.clientHeight;
+      const vector = new THREE.Vector3();
+      g.graphData().nodes.forEach(n => {
+        const el = labelDivs.get(n);
+        if (!el) return;
+        vector.copy(n.x ? {x:n.x,y:n.y,z:n.z} : {x:0,y:0,z:0});
+        vector.project(camera);
+        el.style.left = `${(vector.x * 0.5 + 0.5) * width}px`;
+        el.style.top  = `${(-vector.y * 0.5 + 0.5) * height}px`;
+        el.style.display = (vector.z < 1) ? 'block' : 'none';
+      });
+    });
+  } else {
+    g.onRenderFrame(() => {}); // remove overlay updates
+  }
+}
+
+btnLabels.addEventListener('click', () => toggleLabels(!labelsOn));
+
+   
     // --- viewport centering helpers ---
 function panByPixels(px, py) {
   const cam = g.camera();
@@ -3863,7 +3937,8 @@ function loadTTXDemo(){
       setTimeout(() => { try { g.zoomToFit(800, 80); } catch(_) {} }, 80);
     }
     document.getElementById('btnReset').addEventListener('click', resetVisual);
-
+    
+   
     // ---------- init ----------
     (function init(){
       document.getElementById('radius').value = 4;
