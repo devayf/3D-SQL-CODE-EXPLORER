@@ -28,7 +28,7 @@
       padding:10px; display:flex; gap:8px; align-items:center; border-bottom:1px solid var(--border);
     }
     .brand{ display:flex; align-items:center; gap:10px; padding-right:12px; border-right:1px solid var(--border) }
-    .title{ font-weight:700; letter-spacing:.3px; font-size:1.8rem; }
+    .title{ font-weight:700; letter-spacing:.3px; font-size:1.6rem; }
     #topbar input,#topbar button,#topbar select{
       background:var(--bg); color:var(--text); border:1px solid var(--border); padding:6px 8px; border-radius:6px;
     }
@@ -103,13 +103,47 @@ body.sidebar-collapsed #toggleHandle{
   padding:8px 10px; border-radius:8px;
 }
 #btnLabels:hover{ filter:brightness(1.1); cursor:pointer }
+/* Modern scrollbar for sidebar and chat */
+#sidebar, #chatlog, #inspector {
+  scrollbar-width: thin;           /* For Firefox */
+  scrollbar-color: var(--accent) var(--panel); /* For Firefox */
+}
 
+/* For Chrome/Safari/Edge */
+#sidebar::-webkit-scrollbar,
+#chatlog::-webkit-scrollbar,
+#inspector::-webkit-scrollbar {
+  width: 8px;
+  background: var(--panel);
+}
+#sidebar::-webkit-scrollbar-thumb,
+#chatlog::-webkit-scrollbar-thumb,
+#inspector::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 5px;
+  border: 2px solid var(--panel);
+}
+#sidebar::-webkit-scrollbar-track,
+#chatlog::-webkit-scrollbar-track,
+#inspector::-webkit-scrollbar-track {
+  background: var(--panel);
+  border-radius: 5px;
+}
+input[type="file"]:hover,
+#btnDemo:hover {
+  cursor: pointer;
+}
+input[type="file"]:hover,
+#btnDemo:hover,
+#send:hover {
+  cursor: pointer;
+}
   </style>
 </head>
 <body>
   <div id="topbar">
     <div class="brand">
-      <img src="TTX_Company-Logo.wine.png" alt="TTX Logo" style="height:85px;width:auto;object-fit:contain;vertical-align:middle;">
+      <img src="TTX_Company-Logo.wine.png" alt="TTX Logo" style="height:75px;width:auto;object-fit:contain;vertical-align:middle;">
       <span class="title">SQL Neural Explorer</span>
     </div>
     <div class="searchwrap">
@@ -157,10 +191,10 @@ body.sidebar-collapsed #toggleHandle{
 {
   "nodes": [
     {
-      "id": "Why_Made",
-      "name": "Why_Made",
+      "id": "VMRT_Car_Dimension_Correct",
+      "name": "VMRT_Car_Dimension_Correct",
       "type": "VIEW",
-      "sql": "CREATE VIEW [sv].[Why_Made](Why_Md_Cd_Dimn_Id,Why_Made_Code,Why_Made_Code_Desc)  AS  SELECT VMRT_Why_Made_Code_Dimension.Why_Md_Cd_Dimn_Id,VMRT_Why_Made_Code_Dimension.Repr_Rsn_Cd,VMRT_Why_Made_Code_Dimension.Repr_Rsn_Cd_Desc   FROM DDSMRT.dbo.VMRT_Why_Made_Code_Dimension"
+      "sql": "CREATE VIEW [dbo].[VMRT_Car_Dimension_Correct]  WITH schemabinding  AS       SELECT car.[car_nr],              car.[car_init],             car.[car_status_ufd],              car.[ttx_eff_dt],              car.[car_ownrshp_ind],              car.[pool_cd],              car.[ttx_mngd_car_ind],              car.car_eff_from,              car.car_eff_to,              car.[car_dimn_id],              car.[car_ver],              car.car_src_sys_nm,              car.[ownr_mrk],              car.[eq_hierchy_id],              car.[eq_hierchy_ver],              car.[fleet_hierchy_ver],              car.[entr_hierchy_ver],              car.[fleet_hierchy_id],              car.[entr_hierchy_id],        --7/16/2020 - Eshift data       car.Eshift_Hierchy_Id,       car.Eshift_Hierchy_Ver,             car.[car_cls],              car.[railcar],              car.[car_lineage_grp_id],              car.[assetnum],              car.[fin_car_id],              car.[car_status_maximo],              [umler_blt_dt],              [eq_bldr],              [bldr_lot_cd],              [blt_from_use_ast],              [brk_cd],              [car_cost_est_act],              [lese_cd],              [ldgr_val],              [lst_shp_dt],              [milg_upd_dt],              [orig_car_ownr],              [orig_cost],              [reblt_dt],              [scnd_hand_dt],              [scnd_lese],              [seller_orig_cost],              [setl_val],              [split_or_cmbnd_invl_ind],              [wghg_pty],              [milg_sinc_lst_cls_a_rpr_dt],              [milg_sinc_lst_cls_b_rpr_dt],              [milg_sinc_lst_cls_i_rpr_dt],              [lst_cls_a_rpr_dt],              [lst_cls_b_rpr_dt],              [lst_cls_i_rpr_dt],              [num_dy_car_can],              [num_dy_car_mex],              [can_mex_dy_lst_updt_dt],              [blng_extd_srvc_ind],              [rub_rail_upd],              [cert_dt],              [cert_cd],              [car_grd],              [car_grd_dt],              [osid_usa_ind],              [insd_len],              [osid_len],              car.car_char_eff_from,              car.car_char_eff_to              --    ,ISNULL(ISNULL(car.[Pltfm_Fctr], 2*Ut_Cnt),1.0) as [Pltfm_Fctr]              ,              Isnull(car.[pltfm_fctr], 1.0) AS [Pltfm_Fctr],              car.[trk_axl_cnt],              car.[axl_cnt],              Isnull(car.[tpe_fctr], 1)     AS [TPE_Fctr],              car.[ut_cnt],              [eq_typ_cd],              [intmdit_connt_styl],              [s_str_bldr_cd],              [s_str_modl],              [s_str_blt_dt],              [rt_ind],              [s_str_addn_betr_val],              [orig_rk_cost],              [act_rk_dim_ind],              [s_str_deck_bc_setg],              [s_str_deck_ab_setg],              [s_str_chock_typ],              [s_str_end_door_m941_90_qlfy],              [s_str_dooredg_prot_cd],              [enclsd_s_str_top_deck_setg],              [s_str_lese],              [auto_rk_ctgy],              [s_str_ownr],              [s_str_crnt_cost],              [s_str_enclsr_cd],              [s_str_end_door_dsgn],              [s_str_deck_lvl_cd],              [s_str_tare_wgt],              [is_s_str_intg_wth_car],              [car_char_dimn_id],              [car_char_ver],              [elem_desc],              [elem_id],              [elem_lbl],              [elem_shrt_desc],              car.[ttx_blt_dt],              hier1.ttx_eq_cd,              hier1.[eq_char],              hier1.ttx_eq_cd_desc              ---- container car logic              ,              CASE                WHEN ( CASE                         WHEN hier3.stat_cd IN ( 998, 999 ) THEN                         hier3.[bus_ln_shrt_desc]                         ELSE Isnull(hier3.[bus_ln_shrt_desc],                              Hier2.business_line_description)                       END ) = 'Intermodal'                     AND [ttx_mngd_car_ind] = 0 THEN                  CASE                    WHEN Substring([eq_typ_cd], 1, 1) IN ( 'P', 'Q' ) THEN                    'Conventional'                    WHEN Substring([eq_typ_cd], 1, 2) IN                         ( 'S1', 'S2', 'S3', 'S4', 'S5' ) THEN                    'DTTX 40-48ft'                    WHEN Substring([eq_typ_cd], 1, 2) IN ( 'S6', 'S7' ) THEN                    'DTTX 53-56ft'                    ELSE hier2.[fleet_segment_description]                  END                WHEN ( CASE                         WHEN hier3.stat_cd IN ( 998, 999 ) THEN                         hier3.[bus_ln_shrt_desc]                         ELSE Isnull(hier3.[bus_ln_shrt_desc],                              Hier2.business_line_description)                       END ) = 'Intermodal'                     AND ( COALESCE(car.[car_status_maximo], car.[car_status_ufd]) =                           'PRE-REGISTERED'                            OR COALESCE(car.[car_status_maximo],                               car.[car_status_ufd])                               IS NULL                         ) THEN NULL                ELSE hier2.[fleet_segment_description]              END                           AS [Fleet_Segment_Description],              Isnull(CASE                       WHEN ( CASE                                WHEN hier3.stat_cd IN ( 998, 999 ) THEN                                hier3.[bus_ln_shrt_desc]                                ELSE Isnull(hier3.[bus_ln_shrt_desc],                                     Hier2.business_line_description)                              END ) = 'Intermodal'                            AND [ttx_mngd_car_ind] = 0 THEN                         CASE                           WHEN Substring([eq_typ_cd], 1, 1) IN ( 'P', 'Q' ) THEN                           'Conventional'                           WHEN Substring([eq_typ_cd], 1, 2) IN (                                'S1', 'S2', 'S3', 'S4',                                'S5', 'S6', 'S7' ) THEN                           'Doublestack'                         END                       ELSE ( CASE                                WHEN hier3.stat_cd IN ( 998, 999 ) THEN                                hier3.[eq_typ_shrt_desc]                                ELSE Isnull(hier3.[eq_typ_shrt_desc],                                     hier2.equipment_type_description)                              END )                     END, 'Unknown')        AS Equipment_Type_Description,              hier3.[stat_cd]               AS Stat_Code,              Isnull(CASE                       WHEN ( CASE                                WHEN hier3.stat_cd IN ( 998, 999 ) THEN                                hier3.[bus_ln_shrt_desc]                                ELSE Isnull(hier3.[bus_ln_shrt_desc],                                     Hier2.business_line_description)                              END ) = 'Intermodal'                            AND [ttx_mngd_car_ind] = 0 THEN                         CASE                           WHEN Substring([eq_typ_cd], 1, 2) IN                                ( 'S1', 'S2', 'S3', 'S4', 'S5' ) THEN                           '40 ft Wells'                           WHEN Substring([eq_typ_cd], 1, 2) IN ( 'S6', 'S7' ) THEN                           '53 ft Wells'                           ELSE hier3.[eq_featr_shrt_desc]                         END                       ELSE hier3.[eq_featr_shrt_desc]                     END, 'Unknown')        AS [Equipment_Feature],              hier3.[car_hrly_rt]           AS Car_Hourly_Rate,              hier3.[est_car_hrly_rate]     AS Estimated_Car_Hourly_Rate,              hier3.[daily_miles]           AS Daily_Miles,              hier3.[milg_rt]               AS Milg_Rate,              hier3.[fleet_type],              hier3.[rack_type],              Isnull(CASE                       WHEN ( CASE                                WHEN hier3.stat_cd IN ( 998, 999 ) THEN                                hier3.[bus_ln_shrt_desc]                                ELSE Isnull(hier3.[bus_ln_shrt_desc],                                     Hier2.business_line_description)                              END ) = 'Intermodal'                            AND [ttx_mngd_car_ind] = 0 THEN                         CASE                           WHEN Substring([eq_typ_cd], 1, 1) IN ( 'P', 'Q' ) THEN                           'Conventional'                           WHEN Substring([eq_typ_cd], 1, 2) IN (                                'S1', 'S2', 'S3', 'S4',                                'S5', 'S6', 'S7' ) THEN                           'Doublestack'                         END                       ELSE ( CASE                                WHEN hier3.stat_cd IN ( 998, 999 ) THEN                                hier3.[eq_typ_shrt_desc]                                ELSE Isnull(hier3.[eq_typ_shrt_desc],                                     hier2.equipment_type_description)                              END )                     END, 'Unknown')        AS Equipment_Type,              Isnull(CASE                       WHEN hier3.stat_cd IN ( 998, 999 ) THEN                       hier3.[bus_ln_shrt_desc]                       ELSE Isnull(hier3.[bus_ln_shrt_desc],                            Hier2.business_line_description)                     END, 'Unknown')        AS Business_Line,         Car_Health_Rating,      [Lessor],      [Lease_number],      [Maintenance_Terms],      [Lease_Termination_Date],     hier4.bus_Ln_Shrt_Desc Eshift_Business_Line,       hier4.Eq_Featr_Shrt_Desc Eshift_Equipment_Feature,       hier4.Eq_Typ_Shrt_Desc Eshift_Equipment_Type,       hier4.Stat_Cd Eshift_Stat_Code,       hier4.Total_Line_Of_Business AS Eshift_Total_Line_Of_Business,     hier4.Oracle_Lob AS Eshift_Oracle_Lob    -- Car_Health_Score       FROM   (SELECT [car_nr],                      [car_init],                      [car_status_ufd],                      [ttx_eff_dt],                      [car_ownrshp_ind],                      [pool_cd],                      [ttx_mngd_car_ind],                      car_eff_from,                      car_eff_to,                      [car_dimn_id],                      [car_ver],                      car_src_sys_nm,                      [ownr_mrk],                      [eq_hierchy_id],                      [eq_hierchy_ver],                      [fleet_hierchy_ver],                      [entr_hierchy_ver],                      [fleet_hierchy_id],                      [entr_hierchy_id],          Eshift_Hierchy_Id,         Eshift_Hierchy_Ver,                     [car_cls],                      [railcar],                      [car_lineage_grp_id],                      [assetnum],                      [fin_car_id],                      [car_status_maximo],                      [umler_blt_dt],                      [eq_bldr],                      [bldr_lot_cd],                      [blt_from_use_ast],                      [brk_cd],                      [car_cost_est_act],                      [lese_cd],                      [ldgr_val],                      [lst_shp_dt],                      [milg_upd_dt],                      [orig_car_ownr],                      [orig_cost],                      [reblt_dt],                      [scnd_hand_dt],                      [scnd_lese],                      [seller_orig_cost],                      [setl_val],                      [split_or_cmbnd_invl_ind],                      [wghg_pty],                      [milg_sinc_lst_cls_a_rpr_dt],                      [milg_sinc_lst_cls_b_rpr_dt],                      [milg_sinc_lst_cls_i_rpr_dt],                      [lst_cls_a_rpr_dt],                      [lst_cls_b_rpr_dt],                      [lst_cls_i_rpr_dt],                      [num_dy_car_can],                      [num_dy_car_mex],                      [can_mex_dy_lst_updt_dt],                      [blng_extd_srvc_ind],                      [rub_rail_upd],                      [cert_dt],                      [cert_cd],                      [car_grd],                      [car_grd_dt],                      [osid_usa_ind],                      [insd_len],                      [osid_len],                      car_char_eff_from,                      car_char_eff_to,                      [pltfm_fctr],                      [trk_axl_cnt],                      [axl_cnt],                      [tpe_fctr],                      [ut_cnt],                      [eq_typ_cd],                      [intmdit_connt_styl],                      [s_str_bldr_cd],                      [s_str_modl],                      [s_str_blt_dt],                      [rt_ind],                      [s_str_addn_betr_val],                      [orig_rk_cost],                      [act_rk_dim_ind],                      [s_str_deck_bc_setg],                      [s_str_deck_ab_setg],                      [s_str_chock_typ],                      [s_str_end_door_m941_90_qlfy],                      [s_str_dooredg_prot_cd],                      [enclsd_s_str_top_deck_setg],                      [s_str_lese],                      [auto_rk_ctgy],                      [s_str_ownr],                      [s_str_crnt_cost],                      [s_str_enclsr_cd],                      [s_str_end_door_dsgn],                      [s_str_deck_lvl_cd],                      [s_str_tare_wgt],                      [is_s_str_intg_wth_car],                      [car_char_dimn_id],                      [car_char_ver],                      [elem_desc],                      [elem_id],                      [elem_lbl],                      [elem_shrt_desc],                      [ttx_blt_dt],      [Lessor],      [Lease_number],      [Maintenance_Terms],      [Lease_Termination_Date],       Car_Health_Rating         --Car_Health_Score              FROM   (SELECT car1.[car_nr],                              car1.[car_init],                              car1.[car_status_ufd],                              car1.[ttx_eff_dt],                              car1.[car_ownrshp_ind],                              car1.[pool_cd],                              car1.[ttx_mngd_car_ind],                              car1.[eff_from]   AS Car_Eff_From,                              car1.[eff_to]     AS Car_Eff_To,                              car1.[car_dimn_id],                              car1.[car_ver],                              car1.[src_sys_nm] AS Car_Src_Sys_Nm,                              car1.[ownr_mrk],                              car1.[eq_hierchy_id],                              car1.[eq_hierchy_ver],                              car1.[fleet_hierchy_ver],                              car1.[entr_hierchy_ver],                              car1.[fleet_hierchy_id],                              car1.[entr_hierchy_id],            car1.Eshift_Hierchy_Id,           car1.Eshift_Hierchy_Ver,                             car1.[car_cls],                              car1.[railcar],                              car1.[car_lineage_grp_id],                              car1.[assetnum],                              car1.[fin_car_id],                              car1.[car_status_maximo],                              cchar.[umler_blt_dt],                              cchar.[eq_bldr],                              cchar.[bldr_lot_cd],                              cchar.[blt_from_use_ast],                              cchar.[brk_cd],                              cchar.[car_cost_est_act],                              cchar.[lese_cd],                              cchar.[ldgr_val],                              cchar.[lst_shp_dt],                              cchar.[milg_upd_dt],                              cchar.[orig_car_ownr],                              cchar.[orig_cost],                              cchar.[reblt_dt],                              cchar.[scnd_hand_dt],                              cchar.[scnd_lese],                              cchar.[seller_orig_cost],                              cchar.[setl_val],                              cchar.[split_or_cmbnd_invl_ind],                              cchar.[wghg_pty],                              cchar.[milg_sinc_lst_cls_a_rpr_dt],                              cchar.[milg_sinc_lst_cls_b_rpr_dt],                              cchar.[milg_sinc_lst_cls_i_rpr_dt],                              cchar.[lst_cls_a_rpr_dt],                              cchar.[lst_cls_b_rpr_dt],                              cchar.[lst_cls_i_rpr_dt],                              cchar.[num_dy_car_can],                              cchar.[num_dy_car_mex],                              cchar.[can_mex_dy_lst_updt_dt],                              cchar.[blng_extd_srvc_ind],                              cchar.[rub_rail_upd],                              cchar.[cert_dt],                              cchar.[cert_cd],                              cchar.[car_grd],                              cchar.[car_grd_dt],                              cchar.[osid_usa_ind],                              cchar.[insd_len],                              cchar.[osid_len],                             cchar.[eff_from]  AS Car_Char_Eff_From,                              cchar.[eff_to]    AS Car_Char_Eff_To,                              cchar.[pltfm_fctr],                              cchar.[trk_axl_cnt],                              cchar.[axl_cnt],                              cchar.[tpe_fctr],                              cchar.[ut_cnt],                              cchar.[eq_typ_cd],                              cchar.[intmdit_connt_styl],                              cchar.[s_str_bldr_cd],                              cchar.[s_str_modl],                              cchar.[s_str_blt_dt],                              cchar.[rt_ind],                              cchar.[s_str_addn_betr_val],                              cchar.[orig_rk_cost],                              cchar.[act_rk_dim_ind],                              cchar.[s_str_deck_bc_setg],                              cchar.[s_str_deck_ab_setg],                              cchar.[s_str_chock_typ],                              cchar.[s_str_end_door_m941_90_qlfy],                              cchar.[s_str_dooredg_prot_cd],                              cchar.[enclsd_s_str_top_deck_setg],                              cchar.[s_str_lese],                              cchar.[auto_rk_ctgy],                              cchar.[s_str_ownr],                              cchar.[s_str_crnt_cost],                              cchar.[s_str_enclsr_cd],                              cchar.[s_str_end_door_dsgn],                              cchar.[s_str_deck_lvl_cd],                              cchar.[s_str_tare_wgt],                              cchar.[is_s_str_intg_wth_car],                              cchar.[car_char_dimn_id],                              cchar.[car_char_ver],                              cchar.[elem_desc],                              cchar.[elem_id],                              cchar.[elem_lbl],                              cchar.[elem_shrt_desc],                             cchar.[ttx_blt_dt],           cchar.[Lessor],         cchar.[Lease_number],         cchar.[Maintenance_Terms],         cchar.[Lease_Termination_Date],         car1.Car_Health_Rating                             --car1.Car_health_score                      FROM   dbo.Car_Dim_Correct (nolock) car1                              LEFT JOIN (SELECT car_dimn_id,                                                car_ver,                                                [umler_blt_dt],                                                [eq_bldr],                                                [bldr_lot_cd],                                                [blt_from_use_ast],                                                [brk_cd],                                                [car_cost_est_act],                                                [lese_cd],                                                [ldgr_val],                                                [lst_shp_dt],                                                [milg_upd_dt],                                                [orig_car_ownr],                                                [orig_cost],                                                [reblt_dt],                                                [scnd_hand_dt],                                                [scnd_lese],                                                [seller_orig_cost],                                                [setl_val],                                                [split_or_cmbnd_invl_ind],                                                [wghg_pty],                                                [milg_sinc_lst_cls_a_rpr_dt],                                                [milg_sinc_lst_cls_b_rpr_dt],                                                [milg_sinc_lst_cls_i_rpr_dt],                                                [lst_cls_a_rpr_dt],                                                [lst_cls_b_rpr_dt],                                                [lst_cls_i_rpr_dt],                                                [num_dy_car_can],                                                [num_dy_car_mex],                                                [can_mex_dy_lst_updt_dt],                  [blng_extd_srvc_ind],                                                [rub_rail_upd],                                                [cert_dt],                                                [cert_cd],                                                [car_grd],                                                [car_grd_dt],                                                [osid_usa_ind],                                                [insd_len],                                                [osid_len],                                                [eff_from],                                                [eff_to],                                                [pltfm_fctr],                                                [trk_axl_cnt],                                                [axl_cnt],                                                [tpe_fctr],                                                [ut_cnt],                                                [eq_typ_cd],                                                [intmdit_connt_styl],                                                [s_str_bldr_cd],                                                [s_str_modl],                                                [s_str_blt_dt],                                                [rt_ind],                                                [s_str_addn_betr_val],                                                [orig_rk_cost],                                                [act_rk_dim_ind],                                                [s_str_deck_bc_setg],                                                [s_str_deck_ab_setg],                                                [s_str_chock_typ],                                                [s_str_end_door_m941_90_qlfy],                                                [s_str_dooredg_prot_cd],                                                [enclsd_s_str_top_deck_setg],                                                [s_str_lese],                                                [auto_rk_ctgy],                                                [s_str_ownr],                                                [s_str_crnt_cost],                                                [s_str_enclsr_cd],                                                [s_str_end_door_dsgn],                                                [s_str_deck_lvl_cd],                                                [s_str_tare_wgt],                                                [is_s_str_intg_wth_car],                                                [car_char_dimn_id],                                                [car_char_ver],                                                [elem_desc],                                                [elem_id],                                                [elem_lbl],                                                [elem_shrt_desc],                                                [ttx_blt_dt] ,               [Lessor],               [Lease_Number],               [Maintenance_Terms],               [Lease_Termination_Date]                                      FROM   dbo.car_characteristic_dim (nolock)                                         WHERE  eff_to IS NULL) cchar                                     ON ( car1.car_dimn_id = cchar.car_dimn_id )) ta)              car              LEFT JOIN [dbo].[vmrt_car_hierarchy_equipment] hier1  WITH(NOLOCK)                     ON ( car.eq_hierchy_id = hier1.hierchy_id                          AND car.eq_hierchy_ver = hier1.hierchy_ver )              LEFT JOIN [dbo].[vmrt_car_hierarchy_fleet] hier2  WITH(NOLOCK)                     ON ( car.fleet_hierchy_id = hier2.hierchy_id                          AND car.fleet_hierchy_ver = hier2.hierchy_ver )              LEFT JOIN [dbo].[vmrt_car_hierarchy_enterprise] hier3  WITH(NOLOCK)                    ON ( car.entr_hierchy_id = hier3.hierchy_id                          AND car.entr_hierchy_ver = hier3.hierchy_ver )      LEFT JOIN [dbo].[VMRT_Car_Hierarchy_Eshift] hier4 WITH(NOLOCK)                      ON ( car.Eshift_Hierchy_Id = hier4.hierchy_id                          AND car.Eshift_Hierchy_Ver = hier4.hierchy_ver )"
     },
     {
       "id": "Vfin_Supplement_Car_Hire_Penalty_Fact",
@@ -571,10 +605,10 @@ body.sidebar-collapsed #toggleHandle{
       "sql": "CREATE VIEW [dbo].[VMRT_DQ_Repair_Event_Cost_Fact_History]  AS  SELECT        Repair_Event_Cost_Fact.Car_Init, Repair_Event_Cost_Fact.Car_Nr, Repair_Event_Cost_Fact.Repr_Enty_Org_Abrv,                            Repair_Event_Cost_Fact.SPLC_Nr, Repair_Event_Cost_Fact.Loc_On_Car_Cd, Repair_Event_Cost_Fact.Why_Md_Cd,                            Repair_Event_Cost_Fact.Cnd_Cd, Repair_Event_Cost_Fact.Repr_Cd, Repair_Event_Cost_Fact.Repr_Cls_Cd, Repair_Event_Cost_Fact.Apl_Job_Cd,                            Repair_Event_Cost_Fact.Apl_Qlfr_Cd, Repair_Event_Cost_Fact.Invc_Enty_Id, dbo.ETL_Error_Check_Lookup.Err_Desc, dbo.ETL_Run.Run_Dt,                            Repair_Event_Cost_Fact.Dq_Flg, dbo.ETL_Error_Check_Lookup.Tbl_Nm  FROM            dbo.ETL_Error_Check_Lookup INNER JOIN                           dbo.ETL_Error_Detail ON dbo.ETL_Error_Check_Lookup.Err_Chk_Id = dbo.ETL_Error_Detail.Err_Chk_Id INNER JOIN                           dbo.ETL_Run ON dbo.ETL_Error_Detail.Run_Id = dbo.ETL_Run.Run_Id INNER JOIN                           dbo.vw_Repair_Event_Cost_Fact_History Repair_Event_Cost_Fact ON dbo.ETL_Error_Detail.DDS_Ver = Repair_Event_Cost_Fact.Car_Ver AND                            dbo.ETL_Error_Detail.DDS_PK = Repair_Event_Cost_Fact.Car_Dimn_Id  WHERE        (Repair_Event_Cost_Fact.Dq_Flg = 1) AND (dbo.ETL_Error_Check_Lookup.Tbl_Nm = 'Repair_Entity_Dim') OR                           (dbo.ETL_Error_Check_Lookup.Tbl_Nm = 'Organization_Dim')"
     },
     {
-      "id": "VMRT_Car_Dimension_Correct",
-      "name": "VMRT_Car_Dimension_Correct",
+      "id": "Why_Made",
+      "name": "Why_Made",
       "type": "VIEW",
-      "sql": "CREATE VIEW [dbo].[VMRT_Car_Dimension_Correct]  WITH schemabinding  AS       SELECT car.[car_nr],              car.[car_init],             car.[car_status_ufd],              car.[ttx_eff_dt],              car.[car_ownrshp_ind],              car.[pool_cd],              car.[ttx_mngd_car_ind],              car.car_eff_from,              car.car_eff_to,              car.[car_dimn_id],              car.[car_ver],              car.car_src_sys_nm,              car.[ownr_mrk],              car.[eq_hierchy_id],              car.[eq_hierchy_ver],              car.[fleet_hierchy_ver],              car.[entr_hierchy_ver],              car.[fleet_hierchy_id],              car.[entr_hierchy_id],        --7/16/2020 - Eshift data       car.Eshift_Hierchy_Id,       car.Eshift_Hierchy_Ver,             car.[car_cls],              car.[railcar],              car.[car_lineage_grp_id],              car.[assetnum],              car.[fin_car_id],              car.[car_status_maximo],              [umler_blt_dt],              [eq_bldr],              [bldr_lot_cd],              [blt_from_use_ast],              [brk_cd],              [car_cost_est_act],              [lese_cd],              [ldgr_val],              [lst_shp_dt],              [milg_upd_dt],              [orig_car_ownr],              [orig_cost],              [reblt_dt],              [scnd_hand_dt],              [scnd_lese],              [seller_orig_cost],              [setl_val],              [split_or_cmbnd_invl_ind],              [wghg_pty],              [milg_sinc_lst_cls_a_rpr_dt],              [milg_sinc_lst_cls_b_rpr_dt],              [milg_sinc_lst_cls_i_rpr_dt],              [lst_cls_a_rpr_dt],              [lst_cls_b_rpr_dt],              [lst_cls_i_rpr_dt],              [num_dy_car_can],              [num_dy_car_mex],              [can_mex_dy_lst_updt_dt],              [blng_extd_srvc_ind],              [rub_rail_upd],              [cert_dt],              [cert_cd],              [car_grd],              [car_grd_dt],              [osid_usa_ind],              [insd_len],              [osid_len],              car.car_char_eff_from,              car.car_char_eff_to              --    ,ISNULL(ISNULL(car.[Pltfm_Fctr], 2*Ut_Cnt),1.0) as [Pltfm_Fctr]              ,              Isnull(car.[pltfm_fctr], 1.0) AS [Pltfm_Fctr],              car.[trk_axl_cnt],              car.[axl_cnt],              Isnull(car.[tpe_fctr], 1)     AS [TPE_Fctr],              car.[ut_cnt],              [eq_typ_cd],              [intmdit_connt_styl],              [s_str_bldr_cd],              [s_str_modl],              [s_str_blt_dt],              [rt_ind],              [s_str_addn_betr_val],              [orig_rk_cost],              [act_rk_dim_ind],              [s_str_deck_bc_setg],              [s_str_deck_ab_setg],              [s_str_chock_typ],              [s_str_end_door_m941_90_qlfy],              [s_str_dooredg_prot_cd],              [enclsd_s_str_top_deck_setg],              [s_str_lese],              [auto_rk_ctgy],              [s_str_ownr],              [s_str_crnt_cost],              [s_str_enclsr_cd],              [s_str_end_door_dsgn],              [s_str_deck_lvl_cd],              [s_str_tare_wgt],              [is_s_str_intg_wth_car],              [car_char_dimn_id],              [car_char_ver],              [elem_desc],              [elem_id],              [elem_lbl],              [elem_shrt_desc],              car.[ttx_blt_dt],              hier1.ttx_eq_cd,              hier1.[eq_char],              hier1.ttx_eq_cd_desc              ---- container car logic              ,              CASE                WHEN ( CASE                         WHEN hier3.stat_cd IN ( 998, 999 ) THEN                         hier3.[bus_ln_shrt_desc]                         ELSE Isnull(hier3.[bus_ln_shrt_desc],                              Hier2.business_line_description)                       END ) = 'Intermodal'                     AND [ttx_mngd_car_ind] = 0 THEN                  CASE                    WHEN Substring([eq_typ_cd], 1, 1) IN ( 'P', 'Q' ) THEN                    'Conventional'                    WHEN Substring([eq_typ_cd], 1, 2) IN                         ( 'S1', 'S2', 'S3', 'S4', 'S5' ) THEN                    'DTTX 40-48ft'                    WHEN Substring([eq_typ_cd], 1, 2) IN ( 'S6', 'S7' ) THEN                    'DTTX 53-56ft'                    ELSE hier2.[fleet_segment_description]                  END                WHEN ( CASE                         WHEN hier3.stat_cd IN ( 998, 999 ) THEN                         hier3.[bus_ln_shrt_desc]                         ELSE Isnull(hier3.[bus_ln_shrt_desc],                              Hier2.business_line_description)                       END ) = 'Intermodal'                     AND ( COALESCE(car.[car_status_maximo], car.[car_status_ufd]) =                           'PRE-REGISTERED'                            OR COALESCE(car.[car_status_maximo],                               car.[car_status_ufd])                               IS NULL                         ) THEN NULL                ELSE hier2.[fleet_segment_description]              END                           AS [Fleet_Segment_Description],              Isnull(CASE                       WHEN ( CASE                                WHEN hier3.stat_cd IN ( 998, 999 ) THEN                                hier3.[bus_ln_shrt_desc]                                ELSE Isnull(hier3.[bus_ln_shrt_desc],                                     Hier2.business_line_description)                              END ) = 'Intermodal'                            AND [ttx_mngd_car_ind] = 0 THEN                         CASE                           WHEN Substring([eq_typ_cd], 1, 1) IN ( 'P', 'Q' ) THEN                           'Conventional'                           WHEN Substring([eq_typ_cd], 1, 2) IN (                                'S1', 'S2', 'S3', 'S4',                                'S5', 'S6', 'S7' ) THEN                           'Doublestack'                         END                       ELSE ( CASE                                WHEN hier3.stat_cd IN ( 998, 999 ) THEN                                hier3.[eq_typ_shrt_desc]                                ELSE Isnull(hier3.[eq_typ_shrt_desc],                                     hier2.equipment_type_description)                              END )                     END, 'Unknown')        AS Equipment_Type_Description,              hier3.[stat_cd]               AS Stat_Code,              Isnull(CASE                       WHEN ( CASE                                WHEN hier3.stat_cd IN ( 998, 999 ) THEN                                hier3.[bus_ln_shrt_desc]                                ELSE Isnull(hier3.[bus_ln_shrt_desc],                                     Hier2.business_line_description)                              END ) = 'Intermodal'                            AND [ttx_mngd_car_ind] = 0 THEN                         CASE                           WHEN Substring([eq_typ_cd], 1, 2) IN                                ( 'S1', 'S2', 'S3', 'S4', 'S5' ) THEN                           '40 ft Wells'                           WHEN Substring([eq_typ_cd], 1, 2) IN ( 'S6', 'S7' ) THEN                           '53 ft Wells'                           ELSE hier3.[eq_featr_shrt_desc]                         END                       ELSE hier3.[eq_featr_shrt_desc]                     END, 'Unknown')        AS [Equipment_Feature],              hier3.[car_hrly_rt]           AS Car_Hourly_Rate,              hier3.[est_car_hrly_rate]     AS Estimated_Car_Hourly_Rate,              hier3.[daily_miles]           AS Daily_Miles,              hier3.[milg_rt]               AS Milg_Rate,              hier3.[fleet_type],              hier3.[rack_type],              Isnull(CASE                       WHEN ( CASE                                WHEN hier3.stat_cd IN ( 998, 999 ) THEN                                hier3.[bus_ln_shrt_desc]                                ELSE Isnull(hier3.[bus_ln_shrt_desc],                                     Hier2.business_line_description)                              END ) = 'Intermodal'                            AND [ttx_mngd_car_ind] = 0 THEN                         CASE                           WHEN Substring([eq_typ_cd], 1, 1) IN ( 'P', 'Q' ) THEN                           'Conventional'                           WHEN Substring([eq_typ_cd], 1, 2) IN (                                'S1', 'S2', 'S3', 'S4',                                'S5', 'S6', 'S7' ) THEN                           'Doublestack'                         END                       ELSE ( CASE                                WHEN hier3.stat_cd IN ( 998, 999 ) THEN                                hier3.[eq_typ_shrt_desc]                                ELSE Isnull(hier3.[eq_typ_shrt_desc],                                     hier2.equipment_type_description)                              END )                     END, 'Unknown')        AS Equipment_Type,              Isnull(CASE                       WHEN hier3.stat_cd IN ( 998, 999 ) THEN                       hier3.[bus_ln_shrt_desc]                       ELSE Isnull(hier3.[bus_ln_shrt_desc],                            Hier2.business_line_description)                     END, 'Unknown')        AS Business_Line,         Car_Health_Rating,      [Lessor],      [Lease_number],      [Maintenance_Terms],      [Lease_Termination_Date],     hier4.bus_Ln_Shrt_Desc Eshift_Business_Line,       hier4.Eq_Featr_Shrt_Desc Eshift_Equipment_Feature,       hier4.Eq_Typ_Shrt_Desc Eshift_Equipment_Type,       hier4.Stat_Cd Eshift_Stat_Code,       hier4.Total_Line_Of_Business AS Eshift_Total_Line_Of_Business,     hier4.Oracle_Lob AS Eshift_Oracle_Lob    -- Car_Health_Score       FROM   (SELECT [car_nr],                      [car_init],                      [car_status_ufd],                      [ttx_eff_dt],                      [car_ownrshp_ind],                      [pool_cd],                      [ttx_mngd_car_ind],                      car_eff_from,                      car_eff_to,                      [car_dimn_id],                      [car_ver],                      car_src_sys_nm,                      [ownr_mrk],                      [eq_hierchy_id],                      [eq_hierchy_ver],                      [fleet_hierchy_ver],                      [entr_hierchy_ver],                      [fleet_hierchy_id],                      [entr_hierchy_id],          Eshift_Hierchy_Id,         Eshift_Hierchy_Ver,                     [car_cls],                      [railcar],                      [car_lineage_grp_id],                      [assetnum],                      [fin_car_id],                      [car_status_maximo],                      [umler_blt_dt],                      [eq_bldr],                      [bldr_lot_cd],                      [blt_from_use_ast],                      [brk_cd],                      [car_cost_est_act],                      [lese_cd],                      [ldgr_val],                      [lst_shp_dt],                      [milg_upd_dt],                      [orig_car_ownr],                      [orig_cost],                      [reblt_dt],                      [scnd_hand_dt],                      [scnd_lese],                      [seller_orig_cost],                      [setl_val],                      [split_or_cmbnd_invl_ind],                      [wghg_pty],                      [milg_sinc_lst_cls_a_rpr_dt],                      [milg_sinc_lst_cls_b_rpr_dt],                      [milg_sinc_lst_cls_i_rpr_dt],                      [lst_cls_a_rpr_dt],                      [lst_cls_b_rpr_dt],                      [lst_cls_i_rpr_dt],                      [num_dy_car_can],                      [num_dy_car_mex],                      [can_mex_dy_lst_updt_dt],                      [blng_extd_srvc_ind],                      [rub_rail_upd],                      [cert_dt],                      [cert_cd],                      [car_grd],                      [car_grd_dt],                      [osid_usa_ind],                      [insd_len],                      [osid_len],                      car_char_eff_from,                      car_char_eff_to,                      [pltfm_fctr],                      [trk_axl_cnt],                      [axl_cnt],                      [tpe_fctr],                      [ut_cnt],                      [eq_typ_cd],                      [intmdit_connt_styl],                      [s_str_bldr_cd],                      [s_str_modl],                      [s_str_blt_dt],                      [rt_ind],                      [s_str_addn_betr_val],                      [orig_rk_cost],                      [act_rk_dim_ind],                      [s_str_deck_bc_setg],                      [s_str_deck_ab_setg],                      [s_str_chock_typ],                      [s_str_end_door_m941_90_qlfy],                      [s_str_dooredg_prot_cd],                      [enclsd_s_str_top_deck_setg],                      [s_str_lese],                      [auto_rk_ctgy],                      [s_str_ownr],                      [s_str_crnt_cost],                      [s_str_enclsr_cd],                      [s_str_end_door_dsgn],                      [s_str_deck_lvl_cd],                      [s_str_tare_wgt],                      [is_s_str_intg_wth_car],                      [car_char_dimn_id],                      [car_char_ver],                      [elem_desc],                      [elem_id],                      [elem_lbl],                      [elem_shrt_desc],                      [ttx_blt_dt],      [Lessor],      [Lease_number],      [Maintenance_Terms],      [Lease_Termination_Date],       Car_Health_Rating         --Car_Health_Score              FROM   (SELECT car1.[car_nr],                              car1.[car_init],                              car1.[car_status_ufd],                              car1.[ttx_eff_dt],                              car1.[car_ownrshp_ind],                              car1.[pool_cd],                              car1.[ttx_mngd_car_ind],                              car1.[eff_from]   AS Car_Eff_From,                              car1.[eff_to]     AS Car_Eff_To,                              car1.[car_dimn_id],                              car1.[car_ver],                              car1.[src_sys_nm] AS Car_Src_Sys_Nm,                              car1.[ownr_mrk],                              car1.[eq_hierchy_id],                              car1.[eq_hierchy_ver],                              car1.[fleet_hierchy_ver],                              car1.[entr_hierchy_ver],                              car1.[fleet_hierchy_id],                              car1.[entr_hierchy_id],            car1.Eshift_Hierchy_Id,           car1.Eshift_Hierchy_Ver,                             car1.[car_cls],                              car1.[railcar],                              car1.[car_lineage_grp_id],                              car1.[assetnum],                              car1.[fin_car_id],                              car1.[car_status_maximo],                              cchar.[umler_blt_dt],                              cchar.[eq_bldr],                              cchar.[bldr_lot_cd],                              cchar.[blt_from_use_ast],                              cchar.[brk_cd],                              cchar.[car_cost_est_act],                              cchar.[lese_cd],                              cchar.[ldgr_val],                              cchar.[lst_shp_dt],                              cchar.[milg_upd_dt],                              cchar.[orig_car_ownr],                              cchar.[orig_cost],                              cchar.[reblt_dt],                              cchar.[scnd_hand_dt],                              cchar.[scnd_lese],                              cchar.[seller_orig_cost],                              cchar.[setl_val],                              cchar.[split_or_cmbnd_invl_ind],                              cchar.[wghg_pty],                              cchar.[milg_sinc_lst_cls_a_rpr_dt],                              cchar.[milg_sinc_lst_cls_b_rpr_dt],                              cchar.[milg_sinc_lst_cls_i_rpr_dt],                              cchar.[lst_cls_a_rpr_dt],                              cchar.[lst_cls_b_rpr_dt],                              cchar.[lst_cls_i_rpr_dt],                              cchar.[num_dy_car_can],                              cchar.[num_dy_car_mex],                              cchar.[can_mex_dy_lst_updt_dt],                              cchar.[blng_extd_srvc_ind],                              cchar.[rub_rail_upd],                              cchar.[cert_dt],                              cchar.[cert_cd],                              cchar.[car_grd],                              cchar.[car_grd_dt],                              cchar.[osid_usa_ind],                              cchar.[insd_len],                              cchar.[osid_len],                             cchar.[eff_from]  AS Car_Char_Eff_From,                              cchar.[eff_to]    AS Car_Char_Eff_To,                              cchar.[pltfm_fctr],                              cchar.[trk_axl_cnt],                              cchar.[axl_cnt],                              cchar.[tpe_fctr],                              cchar.[ut_cnt],                              cchar.[eq_typ_cd],                              cchar.[intmdit_connt_styl],                              cchar.[s_str_bldr_cd],                              cchar.[s_str_modl],                              cchar.[s_str_blt_dt],                              cchar.[rt_ind],                              cchar.[s_str_addn_betr_val],                              cchar.[orig_rk_cost],                              cchar.[act_rk_dim_ind],                              cchar.[s_str_deck_bc_setg],                              cchar.[s_str_deck_ab_setg],                              cchar.[s_str_chock_typ],                              cchar.[s_str_end_door_m941_90_qlfy],                              cchar.[s_str_dooredg_prot_cd],                              cchar.[enclsd_s_str_top_deck_setg],                              cchar.[s_str_lese],                              cchar.[auto_rk_ctgy],                              cchar.[s_str_ownr],                              cchar.[s_str_crnt_cost],                              cchar.[s_str_enclsr_cd],                              cchar.[s_str_end_door_dsgn],                              cchar.[s_str_deck_lvl_cd],                              cchar.[s_str_tare_wgt],                              cchar.[is_s_str_intg_wth_car],                              cchar.[car_char_dimn_id],                              cchar.[car_char_ver],                              cchar.[elem_desc],                              cchar.[elem_id],                              cchar.[elem_lbl],                              cchar.[elem_shrt_desc],                             cchar.[ttx_blt_dt],           cchar.[Lessor],         cchar.[Lease_number],         cchar.[Maintenance_Terms],         cchar.[Lease_Termination_Date],         car1.Car_Health_Rating                             --car1.Car_health_score                      FROM   dbo.Car_Dim_Correct (nolock) car1                              LEFT JOIN (SELECT car_dimn_id,                                                car_ver,                                                [umler_blt_dt],                                                [eq_bldr],                                                [bldr_lot_cd],                                                [blt_from_use_ast],                                                [brk_cd],                                                [car_cost_est_act],                                                [lese_cd],                                                [ldgr_val],                                                [lst_shp_dt],                                                [milg_upd_dt],                                                [orig_car_ownr],                                                [orig_cost],                                                [reblt_dt],                                                [scnd_hand_dt],                                                [scnd_lese],                                                [seller_orig_cost],                                                [setl_val],                                                [split_or_cmbnd_invl_ind],                                                [wghg_pty],                                                [milg_sinc_lst_cls_a_rpr_dt],                                                [milg_sinc_lst_cls_b_rpr_dt],                                                [milg_sinc_lst_cls_i_rpr_dt],                                                [lst_cls_a_rpr_dt],                                                [lst_cls_b_rpr_dt],                                                [lst_cls_i_rpr_dt],                                                [num_dy_car_can],                                                [num_dy_car_mex],                                                [can_mex_dy_lst_updt_dt],                  [blng_extd_srvc_ind],                                                [rub_rail_upd],                                                [cert_dt],                                                [cert_cd],                                                [car_grd],                                                [car_grd_dt],                                                [osid_usa_ind],                                                [insd_len],                                                [osid_len],                                                [eff_from],                                                [eff_to],                                                [pltfm_fctr],                                                [trk_axl_cnt],                                                [axl_cnt],                                                [tpe_fctr],                                                [ut_cnt],                                                [eq_typ_cd],                                                [intmdit_connt_styl],                                                [s_str_bldr_cd],                                                [s_str_modl],                                                [s_str_blt_dt],                                                [rt_ind],                                                [s_str_addn_betr_val],                                                [orig_rk_cost],                                                [act_rk_dim_ind],                                                [s_str_deck_bc_setg],                                                [s_str_deck_ab_setg],                                                [s_str_chock_typ],                                                [s_str_end_door_m941_90_qlfy],                                                [s_str_dooredg_prot_cd],                                                [enclsd_s_str_top_deck_setg],                                                [s_str_lese],                                                [auto_rk_ctgy],                                                [s_str_ownr],                                                [s_str_crnt_cost],                                                [s_str_enclsr_cd],                                                [s_str_end_door_dsgn],                                                [s_str_deck_lvl_cd],                                                [s_str_tare_wgt],                                                [is_s_str_intg_wth_car],                                                [car_char_dimn_id],                                                [car_char_ver],                                                [elem_desc],                                                [elem_id],                                                [elem_lbl],                                                [elem_shrt_desc],                                                [ttx_blt_dt] ,               [Lessor],               [Lease_Number],               [Maintenance_Terms],               [Lease_Termination_Date]                                      FROM   dbo.car_characteristic_dim (nolock)                                         WHERE  eff_to IS NULL) cchar                                     ON ( car1.car_dimn_id = cchar.car_dimn_id )) ta)              car              LEFT JOIN [dbo].[vmrt_car_hierarchy_equipment] hier1  WITH(NOLOCK)                     ON ( car.eq_hierchy_id = hier1.hierchy_id                          AND car.eq_hierchy_ver = hier1.hierchy_ver )              LEFT JOIN [dbo].[vmrt_car_hierarchy_fleet] hier2  WITH(NOLOCK)                     ON ( car.fleet_hierchy_id = hier2.hierchy_id                          AND car.fleet_hierchy_ver = hier2.hierchy_ver )              LEFT JOIN [dbo].[vmrt_car_hierarchy_enterprise] hier3  WITH(NOLOCK)                    ON ( car.entr_hierchy_id = hier3.hierchy_id                          AND car.entr_hierchy_ver = hier3.hierchy_ver )      LEFT JOIN [dbo].[VMRT_Car_Hierarchy_Eshift] hier4 WITH(NOLOCK)                      ON ( car.Eshift_Hierchy_Id = hier4.hierchy_id                          AND car.Eshift_Hierchy_Ver = hier4.hierchy_ver )"
+      "sql": "CREATE VIEW [sv].[Why_Made](Why_Md_Cd_Dimn_Id,Why_Made_Code,Why_Made_Code_Desc)  AS  SELECT VMRT_Why_Made_Code_Dimension.Why_Md_Cd_Dimn_Id,VMRT_Why_Made_Code_Dimension.Repr_Rsn_Cd,VMRT_Why_Made_Code_Dimension.Repr_Rsn_Cd_Desc   FROM DDSMRT.dbo.VMRT_Why_Made_Code_Dimension"
     },
     {
       "id": "AR_FILTER_00005_1691153070",
@@ -3339,93 +3373,82 @@ body.sidebar-collapsed #toggleHandle{
 }  </script>
 
   <script>
-    // ---------- state ----------
-    let fullData = { nodes: [], links: [] };
-    let currentRoot = null;
-    let searchIndex = [];
+// ---------- state ----------
+let fullData = { nodes: [], links: [] };
+let currentRoot = null;
+let searchIndex = [];
+let lastLoad = {
+  data: null,
+  mode: 'demo',
+  view: 'neighborhood',
+  radius: 4,
+  startId: null
+};
 
-    // store last load for reset
-    let lastLoad = {
-      data: null,        // sanitized graph json
-      mode: 'demo',      // 'demo' or 'file'
-      view: 'neighborhood', // 'neighborhood' or 'full'
-      radius: 4,
-      startId: null
-    };
-
-    // ---------- graph ----------
-    const g = ForceGraph3D()(document.getElementById('canvas'))
-      .backgroundColor('#0b0f14')
-      .nodeAutoColorBy('type')
-      .nodeLabel(n => `${n.name || n.id}`)
-      .nodeVal(n => Math.max(2, Math.min(10, 2 + (n.degree || 0) * 0.4)))
-      .nodeRelSize(6)
-      .linkColor(() => '#888')
-      .linkOpacity(0.6)
-      .enableNodeDrag(false)
-      .showNavInfo(false)
-      .onNodeClick(node => {
-        currentRoot = node.id;
-        showDetails(node);
-        renderNeighborhood(node.id, getRadius());
-      });
+// ---------- graph ----------
+const g = ForceGraph3D()(document.getElementById('canvas'))
+  .backgroundColor('#0b0f14')
+  .nodeAutoColorBy('type')
+  .nodeLabel(n => n.name || n.id)
+  .nodeVal(n => Math.max(2, Math.min(10, 2 + (n.degree || 0) * 0.4)))
+  .nodeRelSize(6)
+  .linkColor(() => '#888')
+  .linkOpacity(0.6)
+  .enableNodeDrag(false)
+  .showNavInfo(false)
+  .onNodeClick(node => {
+    currentRoot = node.id;
+    showDetails(node);
+    renderNeighborhood(node.id, getRadius());
+  });
 g.d3Force('charge').strength(-180);
 
-// ----- Add this block for improved camera and zoom controls -----
+// ----- Camera and Controls -----
 const camera = g.camera();
 const controls = g.controls();
-
-camera.far = 10000;        // allow rendering objects that are very far away
+camera.far = 10000;
 camera.updateProjectionMatrix();
-
-controls.minDistance = 1;   // allow zooming in extremely close
-controls.maxDistance = 10000; // allow zooming out extremely far
-controls.enableDamping = true;      // smooth movement
+controls.minDistance = 1;
+controls.maxDistance = 10000;
+controls.enableDamping = true;
 controls.dampingFactor = 0.05;
 controls.enablePan = true;
 controls.minPolarAngle = 0;
 controls.maxPolarAngle = Math.PI;
-   
-    // visual spheres by type
-    const colorByType = t => ({ Table:'#4aa3ff', View:'#9b59b6', Proc:'#f1c40f' }[t] || '#9aa4af');
-    g.nodeThreeObject(n => {
-      const s = Math.max(2, Math.min(10, 2 + (n.degree || 0) * 0.4));
-      const geom = new THREE.SphereGeometry(s, 24, 24);
-      const mat  = new THREE.MeshStandardMaterial({ color: colorByType(n.type), roughness: 0.6, metalness: 0.1 });
-      return new THREE.Mesh(geom, mat);
-    });
-    g.nodeThreeObjectExtend(false);
 
-    // spread forces
-    g.cooldownTicks(400).cooldownTime(16000).d3VelocityDecay(0.18);
-    g.d3Force('link')
-      .distance(l => 70 + 3 * Math.sqrt((l.source.degree || 0) + (l.target.degree || 0)))
-      .strength(0.25);
-    g.d3Force('charge').strength(-180);
-    
-    // lights
-    const scene = g.scene();
-    scene.add(new THREE.AmbientLight(0xffffff, 0.9));
-    const dir = new THREE.DirectionalLight(0xffffff, 0.7);
-    dir.position.set(80, 80, 80);
-    scene.add(dir);
-     
-     
- // --- Show/Hide Labels toggle (keeps node colors, uses same hover text) ---
+// ----- Node Render -----
+const colorByType = t => ({ Table:'#4aa3ff', View:'#9b59b6', Proc:'#f1c40f' }[t] || '#9aa4af');
+g.nodeThreeObject(n => {
+  const s = Math.max(2, Math.min(10, 2 + (n.degree || 0) * 0.4));
+  const geom = new THREE.SphereGeometry(s, 24, 24);
+  const mat  = new THREE.MeshStandardMaterial({ color: colorByType(n.type), roughness: 0.6, metalness: 0.1 });
+  return new THREE.Mesh(geom, mat);
+});
+g.nodeThreeObjectExtend(false);
+
+// ----- Graph Forces -----
+g.cooldownTicks(400).cooldownTime(16000).d3VelocityDecay(0.18);
+g.d3Force('link')
+  .distance(l => 70 + 3 * Math.sqrt((l.source.degree || 0) + (l.target.degree || 0)))
+  .strength(0.25);
+g.d3Force('charge').strength(-180);
+
+// ----- Lighting -----
+const scene = g.scene();
+scene.add(new THREE.AmbientLight(0xffffff, 0.9));
+const dir = new THREE.DirectionalLight(0xffffff, 0.7);
+dir.position.set(80, 80, 80);
+scene.add(dir);
+
+// ----- Labels -----
 let labelsOn = false;
 const btnLabels = document.getElementById('btnLabels');
-
-// the hover text function already defines what to show
-const labelFn = n => `${n.name || n.id}`;
-
-// create a simple HTML overlay for labels so it matches tooltip style
+const labelFn = n => n.name || n.id;
 const labelDivs = new Map();
 
 function toggleLabels(on) {
   labelsOn = on;
   btnLabels.textContent = on ? 'Hide Object Names' : 'Show Object Names';
-
-  // clear any previous labels
   labelDivs.forEach(el => el.remove());
   labelDivs.clear();
 
@@ -3443,13 +3466,12 @@ function toggleLabels(on) {
         borderRadius: '4px',
         pointerEvents: 'none',
         whiteSpace: 'nowrap',
-        transform: 'translate(-50%,-50%)',
+        transform: 'translate(-50%,-50%)'
       });
       container.appendChild(el);
       labelDivs.set(n, el);
     });
 
-    // sync positions on render
     g.onRenderFrame(() => {
       const camera = g.camera();
       const renderer = g.renderer();
@@ -3467,107 +3489,56 @@ function toggleLabels(on) {
       });
     });
   } else {
-    g.onRenderFrame(() => {}); // remove overlay updates
+    g.onRenderFrame(() => {}); // No overlays
   }
 }
-
 btnLabels.addEventListener('click', () => toggleLabels(!labelsOn));
 
-   
-    // --- viewport centering helpers ---
-function panByPixels(px, py) {
-  const cam = g.camera();
-  const controls = g.controls();
-  const dist = cam.position.distanceTo(controls.target);
-  const halfFov = THREE.MathUtils.degToRad(cam.fov * 0.5);
-  const targetHeight = 2 * Math.tan(halfFov) * dist;
-  const targetWidth  = targetHeight * cam.aspect;
-
-  const el = g.renderer().domElement;
-  const worldPerPixelX = targetWidth  / el.clientWidth;
-  const worldPerPixelY = targetHeight / el.clientHeight;
-
-  const dx = px * worldPerPixelX;
-  const dy = py * worldPerPixelY;
-
-  // camera basis vectors
-  const v = new THREE.Vector3();
-  const right = new THREE.Vector3();
-  const up = new THREE.Vector3();
-
-  right.subVectors(cam.position, controls.target).cross(cam.up).normalize().multiplyScalar(-dx);
-  up.copy(cam.up).normalize().multiplyScalar(dy);
-
-  v.copy(right).add(up);
-
-  cam.position.add(v);
-  controls.target.add(v);
-  controls.update();
-}
-
-function shiftForSidebar(opening) {
-  // opening=true when panel slides in, false when it slides out
-  const sw = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sidebar-w')) || 560;
-  const px = (opening ? sw : -sw) / 2; // keep the scene centered in the new viewport
-  panByPixels(px, 0);
-}
-
-// ---------- sidebar toggle ----------
+// ----- Sidebar Toggle -----
 const handle = document.getElementById('toggleHandle');
 const collapseKey = 'sidebar-collapsed';
-const setHandleIcon = () => handle.textContent = document.body.classList.contains('sidebar-collapsed') ? '▸' : '◂';
-const fitGraph = () => { try { g.zoomToFit(400, 60); } catch(_) {} };
-
-// apply stored state at boot
+function setHandleIcon() {
+  handle.textContent = document.body.classList.contains('sidebar-collapsed') ? '▸' : '◂';
+}
+function fitGraph() { try { g.zoomToFit(400, 60); } catch(_) {} }
 if (localStorage.getItem(collapseKey) === '1') document.body.classList.add('sidebar-collapsed');
 setHandleIcon();
-
-// initial fit after layout
 setTimeout(() => { window.dispatchEvent(new Event('resize')); fitGraph(); }, 80);
 
 handle.addEventListener('click', () => {
-  const willOpen = document.body.classList.contains('sidebar-collapsed'); // if collapsed now, we're opening
+  const willOpen = document.body.classList.contains('sidebar-collapsed');
   document.body.classList.toggle('sidebar-collapsed');
   localStorage.setItem(collapseKey, document.body.classList.contains('sidebar-collapsed') ? '1':'0');
   setHandleIcon();
-
-  // wait for CSS transition to resize canvas, then pan to keep center
   setTimeout(() => {
     window.dispatchEvent(new Event('resize'));
-    shiftForSidebar(willOpen);
   }, 260);
 });
 
+// ----- File Loader -----
+document.getElementById('file').addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  try {
+    const text = await file.text();
+    const json = JSON.parse(text);
+    loadGraph(json);
+    lastLoad = { data: JSON.parse(JSON.stringify(fullData)), mode:'file', view:'full', radius:getRadius(), startId: fullData.nodes[0]?.id || null };
+    afterLoad({ full:true });
+    logSys(`Model loaded: ${fullData.nodes.length} nodes, ${fullData.links.length} links.`);
+  } catch (err) {
+    console.error(err);
+    logSys('Invalid JSON file.');
+  }
+});
 
-    // ---------- file loader (show full model) ----------
-    document.getElementById('file').addEventListener('change', async (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      try {
-        const text = await file.text();
-        const json = JSON.parse(text);
-        loadGraph(json);
-        // snapshot for reset: full view
-        lastLoad = { data: JSON.parse(JSON.stringify(fullData)), mode:'file', view:'full', radius:getRadius(), startId: fullData.nodes[0]?.id || null };
-        afterLoad({ full:true });
-        logSys(`Model loaded: ${fullData.nodes.length} nodes, ${fullData.links.length} links.`);
-      } catch (err) {
-        console.error(err);
-        logSys('Invalid JSON file.');
-      }
-    });
-
-    // ---------- demo loader ----------
-function loadTTXDemo(){
+// ----- Demo Loader -----
+function loadTTXDemo() {
   const tag = document.getElementById('ttx-demo');
   if (!tag){ logSys('Embedded demo not found.'); return; }
-
   const json = JSON.parse(tag.textContent);
   loadGraph(json);
-
-  // if you want FULL demo on load:
   const full = true;
-
   lastLoad = {
     data: JSON.parse(JSON.stringify(fullData)),
     mode: 'demo',
@@ -3575,407 +3546,388 @@ function loadTTXDemo(){
     radius: getRadius(),
     startId: full ? null : (fullData.nodes[0]?.id || null)
   };
-
   afterLoad({ full });
   logSys(`TTX demo loaded: ${fullData.nodes.length} nodes, ${fullData.links.length} links.`);
 }
+document.getElementById('btnDemo').onclick = loadTTXDemo;
 
-    document.getElementById('btnDemo').onclick = loadTTXDemo;
+// ----- Search -----
+const searchEl = document.getElementById('search');
+const suggEl   = document.getElementById('sugg');
+function applyFocusToNode(node){
+  if (!node) return;
+  currentRoot = node.id;
+  showDetails(node);
+  renderNeighborhood(node.id, getRadius());
+  logSys(`Focused ${node.id}`);
+}
+function findBestMatch(q){
+  const ql = q.toLowerCase();
+  return fullData.nodes.find(n => String(n.id).toLowerCase() === ql || String(n.name||'').toLowerCase() === ql)
+      || fullData.nodes.find(n => String(n.name||'').toLowerCase().includes(ql))
+      || fullData.nodes.find(n => String(n.id).toLowerCase().includes(ql));
+}
+function updateSuggestions(q){
+  const ql = q.toLowerCase().trim();
+  if (!ql){ suggEl.classList.add('hidden'); suggEl.innerHTML=''; return; }
+  const hits = searchIndex.filter(x => x.name.toLowerCase().includes(ql) || x.id.toLowerCase().includes(ql)).slice(0,12);
+  if (!hits.length){ suggEl.classList.add('hidden'); suggEl.innerHTML=''; return; }
+  suggEl.innerHTML = hits.map(h => (
+    `<div class="item" data-id="${h.id}">
+       <span>${h.name}</span><span class="type">${(h.label.split(' · ')[1]||'').trim()}</span>
+     </div>`
+  )).join('');
+  suggEl.classList.remove('hidden');
+  Array.from(suggEl.querySelectorAll('.item')).forEach(el => {
+    el.onclick = () => {
+      const id = el.getAttribute('data-id');
+      const node = fullData.nodes.find(n => String(n.id) === id);
+      searchEl.value = node?.name || node?.id || '';
+      suggEl.classList.add('hidden');
+      applyFocusToNode(node);
+    };
+  });
+}
+searchEl.addEventListener('input', () => {
+  const q = searchEl.value;
+  updateSuggestions(q);
+  const exact = findBestMatch(q);
+  if (exact && (String(exact.id).toLowerCase() === q.toLowerCase() || String(exact.name||'').toLowerCase() === q.toLowerCase())){
+    applyFocusToNode(exact);
+    suggEl.classList.add('hidden');
+  }
+});
+document.addEventListener('click', (e) => {
+  if (!suggEl.contains(e.target) && e.target !== searchEl) suggEl.classList.add('hidden');
+});
 
-    // ---------- search with suggestions ----------
-    const searchEl = document.getElementById('search');
-    const suggEl   = document.getElementById('sugg');
-
-    function applyFocusToNode(node){
-      if (!node) return;
-      currentRoot = node.id;
-      showDetails(node);
-      renderNeighborhood(node.id, getRadius());
-      logSys(`Focused ${node.id}`);
+// ----- Helpers -----
+function getRadius() {
+  const v = parseInt(document.getElementById('radius').value, 10);
+  return Number.isNaN(v)?4:v;
+}
+function computeDegree(data){
+  const deg = new Map();
+  data.nodes.forEach(n => deg.set(n.id, 0));
+  data.links.forEach(l => {
+    const s = typeof l.source === 'object' ? l.source.id : l.source;
+    const t = typeof l.target === 'object' ? l.target.id : l.target;
+    deg.set(s, (deg.get(s)||0)+1);
+    deg.set(t, (deg.get(t)||0)+1);
+  });
+  data.nodes.forEach(n => {
+    n.degree = deg.get(n.id) || 0;
+    n._r = Math.max(2, Math.min(10, 2 + (n.degree || 0) * 0.4));
+  });
+}
+function buildIndex(data){
+  const adj = new Map();
+  data.nodes.forEach(n => adj.set(n.id, new Set()));
+  data.links.forEach(l => {
+    const s = typeof l.source === 'object' ? l.source.id : l.source;
+    const t = typeof l.target === 'object' ? l.target.id : l.target;
+    adj.get(s)?.add(t);
+    adj.get(t)?.add(s);
+  });
+  return adj;
+}
+function bfsSubgraph(startId, radius, data){
+  if (!startId) return data;
+  const adj = buildIndex(data);
+  const vis = new Set([startId]);
+  const q = [[startId,0]];
+  while(q.length){
+    const [u,d] = q.shift();
+    if (d === radius) continue;
+    for (const v of (adj.get(u)||[])) if (!vis.has(v)){
+      vis.add(v); q.push([v,d+1]);
     }
-
-    function findBestMatch(q){
-      const ql = q.toLowerCase();
-      return fullData.nodes.find(n => String(n.id).toLowerCase() === ql || String(n.name||'').toLowerCase() === ql)
-          || fullData.nodes.find(n => String(n.name||'').toLowerCase().includes(ql))
-          || fullData.nodes.find(n => String(n.id).toLowerCase().includes(ql));
-    }
-
-    function updateSuggestions(q){
-      const ql = q.toLowerCase().trim();
-      if (!ql){ suggEl.classList.add('hidden'); suggEl.innerHTML=''; return; }
-      const hits = searchIndex.filter(x => x.name.toLowerCase().includes(ql) || x.id.toLowerCase().includes(ql)).slice(0,12);
-      if (!hits.length){ suggEl.classList.add('hidden'); suggEl.innerHTML=''; return; }
-      suggEl.innerHTML = hits.map(h => (
-        `<div class="item" data-id="${h.id}">
-           <span>${h.name}</span><span class="type">${(h.label.split(' · ')[1]||'').trim()}</span>
-         </div>`
-      )).join('');
-      suggEl.classList.remove('hidden');
-      Array.from(suggEl.querySelectorAll('.item')).forEach(el => {
-        el.onclick = () => {
-          const id = el.getAttribute('data-id');
-          const node = fullData.nodes.find(n => String(n.id) === id);
-          searchEl.value = node?.name || node?.id || '';
-          suggEl.classList.add('hidden');
-          applyFocusToNode(node);
-        };
-      });
-    }
-
-    searchEl.addEventListener('input', () => {
-      const q = searchEl.value;
-      updateSuggestions(q);
-      const exact = findBestMatch(q);
-      if (exact && (String(exact.id).toLowerCase() === q.toLowerCase() || String(exact.name||'').toLowerCase() === q.toLowerCase())){
-        applyFocusToNode(exact);
-        suggEl.classList.add('hidden');
-      }
-    });
-
-    document.addEventListener('click', (e) => {
-      if (!suggEl.contains(e.target) && e.target !== searchEl) suggEl.classList.add('hidden');
-    });
-
-    // ---------- helpers ----------
-    function getRadius(){
-      const v = parseInt(document.getElementById('radius').value, 10);
-      return Number.isNaN(v)?4:v;
-    }
-
-    function computeDegree(data){
-      const deg = new Map();
-      data.nodes.forEach(n => deg.set(n.id, 0));
-      data.links.forEach(l => {
-        const s = typeof l.source === 'object' ? l.source.id : l.source;
-        const t = typeof l.target === 'object' ? l.target.id : l.target;
-        deg.set(s, (deg.get(s)||0)+1);
-        deg.set(t, (deg.get(t)||0)+1);
-      });
-      data.nodes.forEach(n => {
-        n.degree = deg.get(n.id) || 0;
-        n._r = Math.max(2, Math.min(10, 2 + (n.degree || 0) * 0.4));
-      });
-    }
-
-    function buildIndex(data){
-      const adj = new Map();
-      data.nodes.forEach(n => adj.set(n.id, new Set()));
-      data.links.forEach(l => {
-        const s = typeof l.source === 'object' ? l.source.id : l.source;
-        const t = typeof l.target === 'object' ? l.target.id : l.target;
-        adj.get(s)?.add(t);
-        adj.get(t)?.add(s);
-      });
-      return adj;
-    }
-
-    function bfsSubgraph(startId, radius, data){
-      if (!startId) return data;
-      const adj = buildIndex(data);
-      const vis = new Set([startId]);
-      const q = [[startId,0]];
-      while(q.length){
-        const [u,d] = q.shift();
-        if (d === radius) continue;
-        for (const v of (adj.get(u)||[])) if (!vis.has(v)){
-          vis.add(v); q.push([v,d+1]);
-        }
-      }
-      const nodes = data.nodes.filter(n => vis.has(n.id));
-      const S = new Set(nodes.map(n => n.id));
-      const links = data.links.filter(l => {
-        const s = typeof l.source === 'object' ? l.source.id : l.source;
-        const t = typeof l.target === 'object' ? l.target.id : l.target;
-        return S.has(s) && S.has(t);
-      });
-      return { nodes, links };
-    }
-
-    function renderNeighborhood(rootId, radius, forceFull=false){
-      if (forceFull || !rootId){
-        computeDegree(fullData);
-        g.graphData(fullData);
-        toggleLabels(labelsOn);
-        setTimeout(() => { try { g.zoomToFit(800, 80); } catch(_) {} }, 80);
-        return;
-      }
-      if ((radius|0) === 0){
-        const node = fullData.nodes.find(n => n.id === rootId);
-        if (node){
-          g.graphData({ nodes: [{...node, degree: 0}], links: [] });
-          setTimeout(() => { try { g.zoomToFit(600, 60); } catch(_) {} }, 60);
-        }
-        return;
-      }
-      const sub = bfsSubgraph(rootId, radius, fullData);
-      computeDegree(sub);
-      g.graphData(sub);
-      toggleLabels(labelsOn);
+  }
+  const nodes = data.nodes.filter(n => vis.has(n.id));
+  const S = new Set(nodes.map(n => n.id));
+  const links = data.links.filter(l => {
+    const s = typeof l.source === 'object' ? l.source.id : l.source;
+    const t = typeof l.target === 'object' ? l.target.id : l.target;
+    return S.has(s) && S.has(t);
+  });
+  return { nodes, links };
+}
+function renderNeighborhood(rootId, radius, forceFull=false) {
+  if (forceFull || !rootId) {
+    computeDegree(fullData);
+    g.graphData(fullData);
+    toggleLabels(labelsOn);
+    setTimeout(() => { try { g.zoomToFit(800, 80); } catch(_) {} }, 80);
+    return;
+  }
+  if ((radius|0) === 0){
+    const node = fullData.nodes.find(n => n.id === rootId);
+    if (node){
+      g.graphData({ nodes: [{...node, degree: 0}], links: [] });
       setTimeout(() => { try { g.zoomToFit(600, 60); } catch(_) {} }, 60);
     }
-
-    function shortestPath(src,dst,data){
-      const adj = buildIndex(data);
-      const q = [[src]];
-      const seen = new Set([src]);
-      while(q.length){
-        const path = q.shift(), last = path[path.length-1];
-        if (last === dst) return path;
-        for (const v of (adj.get(last)||[])){
-          if (!seen.has(v)){
-            seen.add(v); q.push(path.concat(v));
-          }
-        }
+    return;
+  }
+  const sub = bfsSubgraph(rootId, radius, fullData);
+  computeDegree(sub);
+  g.graphData(sub);
+  toggleLabels(labelsOn);
+  setTimeout(() => { try { g.zoomToFit(600, 60); } catch(_) {} }, 60);
+}
+function shortestPath(src,dst,data){
+  const adj = buildIndex(data);
+  const q = [[src]];
+  const seen = new Set([src]);
+  while(q.length){
+    const path = q.shift(), last = path[path.length-1];
+    if (last === dst) return path;
+    for (const v of (adj.get(last)||[])){
+      if (!seen.has(v)){
+        seen.add(v); q.push(path.concat(v));
       }
-      return null;
     }
-
-    function highlightPath(path){
-      const set = new Set(path);
-      const links = fullData.links.filter(l => {
-        const s = typeof l.source === 'object' ? l.source.id : l.source;
-        const t = typeof l.target === 'object' ? l.target.id : l.target;
-        return set.has(s) && set.has(t);
-      });
-      const nodes = fullData.nodes.filter(n => set.has(n.id));
-      g.graphData({nodes, links});
-    }
-
-    // ---------- details ----------
-    function showDetails(n){
-      const el = document.getElementById('details');
-      const name = n.name || n.id;
-      const type = n.type || 'Object';
-      const deg  = n.degree ?? 0;
-      const sql  = n.sql || 'No SQL available.';
-      el.innerHTML = (
-        `<div><strong>${escapeHtml(name)}</strong></div>
-         <div class="muted">${escapeHtml(type)} · degree ${deg}</div>
-         <div style="margin-top:8px" class="muted">SQL</div>
-         <pre>${escapeHtml(sql)}</pre>
-         <div style="margin-top:8px" class="muted">Properties</div>
-         <pre>${escapeHtml(JSON.stringify({id:n.id,type:n.type,degree:n.degree}, null, 2))}</pre>`
-      );
-      document.getElementById('title').textContent = name;
-    }
-
-    function escapeHtml(s){
-      return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-    }
-
-    // ---------- data plumbing ----------
-    function normalizeLinks(json){
-      json.links = (json.links || []).map(l => ({
-        source: typeof l.source === 'object' ? l.source.id : l.source,
-        target: typeof l.target === 'object' ? l.target.id : l.target,
-        kind: l.kind || 'DEPENDS_ON'
-      }));
-      return json;
-    }
-    function normalizeType(t){
-  if (!t) return 'Object';
-  const s = String(t).toLowerCase().trim();
-
-  // Tables
-  if (s.includes('table') || s === 'user_table' || s === 'base_table' || s === 'system_table')
-    return 'Table';
-
-  // Views
-  if (s.includes('view') || s.startsWith('vw_'))
-    return 'View';
-
-  // Procedures
-  if (s.includes('procedure') || s.includes('proc') || s.includes('sp_') || s.includes('stored_proc'))
-    return 'Proc';
-
-  // Functions
-  if (s.includes('function') || s.includes('fn_') || s.includes('udf') || s.includes('tvf'))
-    return 'Function';
-
-  // Triggers
-  if (s.includes('trigger'))
-    return 'Trigger';
-
-  // Synonyms
-  if (s.includes('synonym'))
-    return 'Synonym';
-
-  // Types
-  if (s.includes('type') || s.includes('udt'))
-    return 'Type';
-
-  // Constraints
-  if (s.includes('constraint') || s.includes('foreign') || s.includes('primary') || s.includes('check'))
-    return 'Constraint';
-
-  // Default / unknown
-  return 'Object';
+  }
+  return null;
+}
+function highlightPath(path){
+  const set = new Set(path);
+  const links = fullData.links.filter(l => {
+    const s = typeof l.source === 'object' ? l.source.id : l.source;
+    const t = typeof l.target === 'object' ? l.target.id : l.target;
+    return set.has(s) && set.has(t);
+  });
+  const nodes = fullData.nodes.filter(n => set.has(n.id));
+  g.graphData({nodes, links});
 }
 
-    function sanitizeGraph(data){
-      data.nodes.forEach(n => { n.type = normalizeType(n.type); n.id = String(n.id).trim(); n.name = String(n.name || n.id).trim(); });
-      const seen = new Set();
-      data.links = (data.links || []).map(l => ({
-        source: String(typeof l.source === 'object' ? l.source.id : l.source).trim(),
-        target: String(typeof l.target === 'object' ? l.target.id : l.target).trim(),
-        kind: l.kind || 'DEPENDS_ON'
-      }))
-      .filter(l => l.source && l.target && l.source !== l.target)
-      .filter(l => { const k = `${l.source}->${l.target}`; if (seen.has(k)) return false; seen.add(k); return true; });
+// ----- Details -----
+function showDetails(n){
+  const el = document.getElementById('details');
+  const name = n.name || n.id;
+  const type = n.type || 'Object';
+  const deg  = n.degree ?? 0;
+  const sql  = n.sql || 'No SQL available.';
+  el.innerHTML = (
+    `<div><strong>${escapeHtml(name)}</strong></div>
+     <div class="muted">${escapeHtml(type)} · degree ${deg}</div>
+     <div style="margin-top:8px" class="muted">SQL</div>
+     <pre>${escapeHtml(sql)}</pre>
+     <div style="margin-top:8px" class="muted">Properties</div>
+     <pre>${escapeHtml(JSON.stringify({id:n.id,type:n.type,degree:n.degree}, null, 2))}</pre>`
+  );
+  document.getElementById('title').textContent = name;
+}
+function escapeHtml(s){
+  return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+}
 
-      const nodeSet = new Set(data.nodes.map(n => n.id));
-      for (const l of data.links){
-        if (!nodeSet.has(l.source)) { data.nodes.push({ id:l.source, name:l.source, type:'Object' }); nodeSet.add(l.source); }
-        if (!nodeSet.has(l.target)) { data.nodes.push({ id:l.target, name:l.target, type:'Object' }); nodeSet.add(l.target); }
-      }
-      return data;
-    }
+// ----- Data Plumbing -----
+function normalizeLinks(json){
+  json.links = (json.links || []).map(l => ({
+    source: typeof l.source === 'object' ? l.source.id : l.source,
+    target: typeof l.target === 'object' ? l.target.id : l.target,
+    kind: l.kind || 'DEPENDS_ON'
+  }));
+  return json;
+}
+function normalizeType(t){
+  if (!t) return 'Object';
+  const s = String(t).toLowerCase().trim();
+  if (s.includes('table') || s === 'user_table' || s === 'base_table' || s === 'system_table')
+    return 'Table';
+  if (s.includes('view') || s.startsWith('vw_'))
+    return 'View';
+  if (s.includes('procedure') || s.includes('proc') || s.includes('sp_') || s.includes('stored_proc'))
+    return 'Proc';
+  if (s.includes('function') || s.includes('fn_') || s.includes('udf') || s.includes('tvf'))
+    return 'Function';
+  if (s.includes('trigger'))
+    return 'Trigger';
+  if (s.includes('synonym'))
+    return 'Synonym';
+  if (s.includes('type') || s.includes('udt'))
+    return 'Type';
+  if (s.includes('constraint') || s.includes('foreign') || s.includes('primary') || s.includes('check'))
+    return 'Constraint';
+  return 'Object';
+}
+function sanitizeGraph(data){
+  data.nodes.forEach(n => {
+    n.type = normalizeType(n.type);
+    n.id = String(n.id).trim();
+    n.name = String(n.name || n.id).trim();
+  });
+  const seen = new Set();
+  data.links = (data.links || []).map(l => ({
+    source: String(typeof l.source === 'object' ? l.source.id : l.source).trim(),
+    target: String(typeof l.target === 'object' ? l.target.id : l.target).trim(),
+    kind: l.kind || 'DEPENDS_ON'
+  }))
+  .filter(l => l.source && l.target && l.source !== l.target)
+  .filter(l => { const k = `${l.source}->${l.target}`; if (seen.has(k)) return false; seen.add(k); return true; });
 
-    function loadGraph(json){
-      if (!json || !Array.isArray(json.nodes) || !Array.isArray(json.links)){
-        logSys('Invalid model JSON structure.');
-        return;
-      }
-      fullData = sanitizeGraph(normalizeLinks(json));
-      computeDegree(fullData);
-    }
+  const nodeSet = new Set(data.nodes.map(n => n.id));
+  for (const l of data.links){
+    if (!nodeSet.has(l.source)) { data.nodes.push({ id:l.source, name:l.source, type:'Object' }); nodeSet.add(l.source); }
+    if (!nodeSet.has(l.target)) { data.nodes.push({ id:l.target, name:l.target, type:'Object' }); nodeSet.add(l.target); }
+  }
+  return data;
+}
+function loadGraph(json){
+  if (!json || !Array.isArray(json.nodes) || !Array.isArray(json.links)){
+    logSys('Invalid model JSON structure.');
+    return;
+  }
+  fullData = sanitizeGraph(normalizeLinks(json));
+  computeDegree(fullData);
+}
+function afterLoad({ full=false } = {}){
+  buildSearchIndex(fullData.nodes);
+  const startId = fullData.nodes[0]?.id || null;
+  currentRoot = startId;
+  renderNeighborhood(full ? null : startId, getRadius(), full);
+}
+function buildSearchIndex(nodes){
+  const seen = new Set();
+  searchIndex = nodes.map(n => ({
+    id: String(n.id),
+    name: String(n.name || n.id),
+    label: `${n.name || n.id}${n.type ? ' · ' + n.type : ''}`
+  })).filter(x => {
+    const k = x.name.toLowerCase();
+    if (seen.has(k)) return false; seen.add(k); return true;
+  });
+}
 
-    function afterLoad({ full=false } = {}){
-      buildSearchIndex(fullData.nodes);
-      const startId = fullData.nodes[0]?.id || null;
-      currentRoot = startId;
-      renderNeighborhood(full ? null : startId, getRadius(), full);
-    }
+// ----- Chat -----
+document.getElementById('send').onclick = onAsk;
+function onAsk(){
+  const p = document.getElementById('prompt').value.trim();
+  if (!p) return;
+  addChat('you', p);
+  handleLocalQuery(p);
+  document.getElementById('prompt').value = '';
+}
+function handleLocalQuery(q){
+  const [cmd, ...rest] = q.split(/\s+/);
+  const arg = rest.join(' ');
+  switch ((cmd||'').toLowerCase()){
+    case 'help':
+      addChat('assistant',
+        "Commands:\n- focus <nodeId>\n- neighbors <nodeId> [radius]\n- shortest <src> <dst>\n- search <text>\n- radius <n>\n- types <Table|View|Proc>");
+      break;
+    case 'focus': {
+      const id = rest[0];
+      const node = fullData.nodes.find(n => n.id === id);
+      if (!node){ addChat('assistant',`No node ${id}`); return; }
+      applyFocusToNode(node);
+    } break;
+    case 'search': {
+      const txt = arg.toLowerCase();
+      const hits = fullData.nodes.filter(n => (n.name||n.id).toLowerCase().includes(txt)).slice(0,20);
+      addChat('assistant', hits.length ? `Matches (${hits.length}): ${hits.map(h=>h.id).join(', ')}` : 'No matches');
+    } break;
+    case 'neighbors': {
+      const id = rest[0];
+      const r = parseInt(rest[1]||String(getRadius()),10);
+      if (!id){ addChat('assistant','Usage: neighbors <nodeId> [radius]'); return; }
+      const node = fullData.nodes.find(n => n.id === id);
+      if (!node){ addChat('assistant',`No node ${id}`); return; }
+      renderNeighborhood(id, Number.isNaN(r)?getRadius():r);
+      const adj = buildIndex(fullData);
+      const nb = Array.from(adj.get(id)||[]);
+      addChat('assistant', `Neighbors of ${id} (1 hop): ${nb.join(', ') || '(none)'}`);
+    } break;
+    case 'shortest': {
+      const [src,dst] = rest;
+      if (!src||!dst){ addChat('assistant','Usage: shortest <src> <dst>'); return; }
+      const path = shortestPath(src,dst,fullData);
+      if (!path){ addChat('assistant',`No path from ${src} to ${dst}`); return; }
+      highlightPath(path);
+      addChat('assistant',`Shortest path (${path.length-1} hops): ${path.join(' -> ')}`);
+    } break;
+    case 'radius': {
+      const n = parseInt(rest[0]||'4',10);
+      document.getElementById('radius').value = String(n);
+      onRadiusChange();
+      addChat('assistant',`Radius set to ${n}`);
+    } break;
+    case 'types': {
+      const want = new Set(rest.join('').split('|').map(s=>s.trim()));
+      const hits = fullData.nodes.filter(n => want.has((n.type||'').toString()));
+      addChat('assistant', hits.length ? `Types ${Array.from(want).join('|')}: ${hits.slice(0,20).map(h=>h.id).join(', ')}${hits.length>20?' …':''}` : 'No matches');
+    } break;
+    default:
+      addChat('assistant','Unknown command. Type "help".');
+  }
+}
+function addChat(role, content){
+  const wrap = document.createElement('div');
+  wrap.className='chat-msg';
+  const r = document.createElement('div'); r.className='chat-role'; r.textContent=role;
+  const b = document.createElement('div'); b.className='chat-bubble'; b.textContent=content;
+  wrap.appendChild(r); wrap.appendChild(b);
+  const log = document.getElementById('chatlog');
+  log.appendChild(wrap); log.scrollTop = log.scrollHeight;
 
-    // ---------- chat ----------
-    document.getElementById('send').onclick = onAsk;
+  // REMOVE every message after N ms
+  setTimeout(() => wrap.remove(), 3000); // 3s, or your preferred duration
 
-    function onAsk(){
-      const p = document.getElementById('prompt').value.trim();
-      if (!p) return;
-      addChat('you', p);
-      handleLocalQuery(p);
-      document.getElementById('prompt').value = '';
-    }
+  return wrap;
+}
 
-    function handleLocalQuery(q){
-      const [cmd, ...rest] = q.split(/\s+/);
-      const arg = rest.join(' ');
-      switch ((cmd||'').toLowerCase()){
-        case 'help':
-          addChat('assistant',
-            "Commands:\n- focus <nodeId>\n- neighbors <nodeId> [radius]\n- shortest <src> <dst>\n- search <text>\n- radius <n>\n- types <Table|View|Proc>");
-          break;
-        case 'focus': {
-          const id = rest[0];
-          const node = fullData.nodes.find(n => n.id === id);
-          if (!node){ addChat('assistant',`No node ${id}`); return; }
-          applyFocusToNode(node);
-        } break;
-        case 'search': {
-          const txt = arg.toLowerCase();
-          const hits = fullData.nodes.filter(n => (n.name||n.id).toLowerCase().includes(txt)).slice(0,20);
-          addChat('assistant', hits.length ? `Matches (${hits.length}): ${hits.map(h=>h.id).join(', ')}` : 'No matches');
-        } break;
-        case 'neighbors': {
-          const id = rest[0];
-          const r = parseInt(rest[1]||String(getRadius()),10);
-          if (!id){ addChat('assistant','Usage: neighbors <nodeId> [radius]'); return; }
-          const node = fullData.nodes.find(n => n.id === id);
-          if (!node){ addChat('assistant',`No node ${id}`); return; }
-          renderNeighborhood(id, Number.isNaN(r)?getRadius():r);
-          const adj = buildIndex(fullData);
-          const nb = Array.from(adj.get(id)||[]);
-          addChat('assistant', `Neighbors of ${id} (1 hop): ${nb.join(', ') || '(none)'}`);
-        } break;
-        case 'shortest': {
-          const [src,dst] = rest;
-          if (!src||!dst){ addChat('assistant','Usage: shortest <src> <dst>'); return; }
-          const path = shortestPath(src,dst,fullData);
-          if (!path){ addChat('assistant',`No path from ${src} to ${dst}`); return; }
-          highlightPath(path);
-          addChat('assistant',`Shortest path (${path.length-1} hops): ${path.join(' -> ')}`);
-        } break;
-        case 'radius': {
-          const n = parseInt(rest[0]||'4',10);
-          document.getElementById('radius').value = String(n);
-          onRadiusChange();
-          addChat('assistant',`Radius set to ${n}`);
-        } break;
-        case 'types': {
-          const want = new Set(rest.join('').split('|').map(s=>s.trim()));
-          const hits = fullData.nodes.filter(n => want.has((n.type||'').toString()));
-          addChat('assistant', hits.length ? `Types ${Array.from(want).join('|')}: ${hits.slice(0,20).map(h=>h.id).join(', ')}${hits.length>20?' …':''}` : 'No matches');
-        } break;
-        default:
-          addChat('assistant','Unknown command. Type "help".');
-      }
-    }
+// ----- Radius Change -----
+function onRadiusChange(){
+  if (!fullData.nodes.length) return;
+  const root = currentRoot || fullData.nodes[0]?.id;
+  if (!root){ renderNeighborhood(null, getRadius(), true); return; }
+  renderNeighborhood(root, getRadius());
+}
+document.getElementById('radius').addEventListener('input', onRadiusChange);
+document.getElementById('radius').addEventListener('change', onRadiusChange);
 
-    function logSys(msg){
-      const el = addChat('system', msg);
-      setTimeout(() => el.remove(), 3000);
-    }
+// ----- Search Index -----
+function buildSearchIndex(nodes){
+  const seen = new Set();
+  searchIndex = nodes.map(n => ({
+    id: String(n.id),
+    name: String(n.name || n.id),
+    label: `${n.name || n.id}${n.type ? ' · ' + n.type : ''}`
+  })).filter(x => {
+    const k = x.name.toLowerCase();
+    if (seen.has(k)) return false; seen.add(k); return true;
+  });
+}
 
-    function addChat(role, content){
-      const wrap = document.createElement('div');
-      wrap.className='chat-msg';
-      const r = document.createElement('div'); r.className='chat-role'; r.textContent=role;
-      const b = document.createElement('div'); b.className='chat-bubble'; b.textContent=content;
-      wrap.appendChild(r); wrap.appendChild(b);
-      const log = document.getElementById('chatlog');
-      log.appendChild(wrap); log.scrollTop = log.scrollHeight;
-      return wrap;
-    }
+// ----- Reset -----
+function resetVisual(){
+  if (!lastLoad.data){ logSys('Nothing to reset. Load a model first.'); return; }
+  fullData = JSON.parse(JSON.stringify(lastLoad.data));
+  computeDegree(fullData);
+  buildSearchIndex(fullData.nodes);
+  document.getElementById('search').value = '';
+  document.getElementById('radius').value = String(lastLoad.radius);
+  currentRoot = (lastLoad.view === 'neighborhood') ? lastLoad.startId : null;
+  const forceFull = (lastLoad.view === 'full');
+  renderNeighborhood(currentRoot, lastLoad.radius, forceFull);
+  document.getElementById('details').textContent = 'Reset to loaded view.';
+  document.getElementById('title').textContent = 'Details';
+  setTimeout(() => { try { g.zoomToFit(800, 80); } catch(_) {} }, 80);
+}
+document.getElementById('btnReset').addEventListener('click', resetVisual);
 
-    // radius change
-    function onRadiusChange(){
-      if (!fullData.nodes.length) return;
-      const root = currentRoot || fullData.nodes[0]?.id;
-      if (!root){ renderNeighborhood(null, getRadius(), true); return; }
-      renderNeighborhood(root, getRadius());
-    }
-    document.getElementById('radius').addEventListener('input', onRadiusChange);
-    document.getElementById('radius').addEventListener('change', onRadiusChange);
+// Button: Toggle Labels
+document.getElementById('btnLabels').addEventListener('click', () => {
+  labelsOn = !labelsOn;
+  toggleLabels(labelsOn);
+});
 
-    // search index
-    function buildSearchIndex(nodes){
-      const seen = new Set();
-      searchIndex = nodes.map(n => ({
-        id: String(n.id),
-        name: String(n.name || n.id),
-        label: `${n.name || n.id}${n.type ? ' · ' + n.type : ''}`
-      })).filter(x => {
-        const k = x.name.toLowerCase();
-        if (seen.has(k)) return false; seen.add(k); return true;
-      });
-    }
-
-    // ---------- reset ----------
-    function resetVisual(){
-      if (!lastLoad.data){ logSys('Nothing to reset. Load a model first.'); return; }
-      fullData = JSON.parse(JSON.stringify(lastLoad.data));
-      computeDegree(fullData);
-      buildSearchIndex(fullData.nodes);
-      document.getElementById('search').value = '';
-      document.getElementById('radius').value = String(lastLoad.radius);
-      currentRoot = (lastLoad.view === 'neighborhood') ? lastLoad.startId : null;
-      const forceFull = (lastLoad.view === 'full');
-      renderNeighborhood(currentRoot, lastLoad.radius, forceFull);
-      document.getElementById('details').textContent = 'Reset to loaded view.';
-      document.getElementById('title').textContent = 'Details';
-      setTimeout(() => { try { g.zoomToFit(800, 80); } catch(_) {} }, 80);
-    }
-    document.getElementById('btnReset').addEventListener('click', resetVisual);
-    
-   
-    // ---------- init ----------
-    (function init(){
-      document.getElementById('radius').value = 4;
-      g.graphData({ nodes: [], links: [] });
-      loadTTXDemo();
-    })();
+// ---------- init ----------
+(function init(){
+  document.getElementById('radius').value = 4;
+  g.graphData({ nodes: [], links: [] });
+  loadTTXDemo();
+})();
   </script>
 </body>
 </html>
