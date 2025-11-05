@@ -59,11 +59,19 @@
     body.sidebar-collapsed #canvas{ right:0 }
 
     #toggleHandle{
-      position:fixed; top:50%; right:var(--sidebar-w); transform:translateY(-50%);
-      background:var(--panel); color:var(--text); border:1px solid var(--border); border-right:none;
-      padding:6px 8px; border-radius:8px 0 0 8px; cursor:pointer; z-index:11; line-height:1;
-    }
-    body.sidebar-collapsed #toggleHandle{ right:0; border-right:1px solid var(--border); border-left:none; border-radius:0 8px 8px 0 }
+  position:fixed; top:50%; right:var(--sidebar-w); transform:translateY(-50%);
+  background:var(--panel); color:var(--text); border:1px solid var(--border); border-right:none;
+  padding:16px 18px;      /* bigger padding for a larger clickable area */
+  font-size:1.6em;        /* make icon/text bigger */
+  border-radius:12px 0 0 12px; /* optionally round more */
+  cursor:pointer; z-index:11; line-height:1;
+}
+body.sidebar-collapsed #toggleHandle{ 
+  right:0; 
+  border-right:1px solid var(--border); 
+  border-left:none; 
+  border-radius:0 12px 12px 0;  /* match new corner radius */
+}
 
     #inspector{ padding:12px; border-bottom:1px solid var(--border); overflow:auto; min-height:0 }
     #details{ color:var(--muted); font-size:13px }
@@ -3361,7 +3369,22 @@
         showDetails(node);
         renderNeighborhood(node.id, getRadius());
       });
+g.d3Force('charge').strength(-180);
 
+// ----- Add this block for improved camera and zoom controls -----
+const camera = g.camera();
+const controls = g.controls();
+
+camera.far = 10000;        // allow rendering objects that are very far away
+camera.updateProjectionMatrix();
+
+controls.minDistance = 1;   // allow zooming in extremely close
+controls.maxDistance = 10000; // allow zooming out extremely far
+controls.enableDamping = true;      // smooth movement
+controls.dampingFactor = 0.05;
+controls.enablePan = true;
+controls.minPolarAngle = 0;
+controls.maxPolarAngle = Math.PI;
    
     // visual spheres by type
     const colorByType = t => ({ Table:'#4aa3ff', View:'#9b59b6', Proc:'#f1c40f' }[t] || '#9aa4af');
@@ -3673,6 +3696,7 @@ function loadTTXDemo(){
       if (forceFull || !rootId){
         computeDegree(fullData);
         g.graphData(fullData);
+        toggleLabels(labelsOn);
         setTimeout(() => { try { g.zoomToFit(800, 80); } catch(_) {} }, 80);
         return;
       }
@@ -3687,6 +3711,7 @@ function loadTTXDemo(){
       const sub = bfsSubgraph(rootId, radius, fullData);
       computeDegree(sub);
       g.graphData(sub);
+      toggleLabels(labelsOn);
       setTimeout(() => { try { g.zoomToFit(600, 60); } catch(_) {} }, 60);
     }
 
