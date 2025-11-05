@@ -8,8 +8,14 @@
     :root{
       --bg:#0b0f14; --panel:#0e141c; --accent:#f2c200; --muted:#9aa4af; --border:#223; --text:#e6e6e6;
       --sidebar-w:560px;
+         .rightAlign {
+  margin-left: auto;
+}
     }
-
+    #search {
+  width: 100%;
+  box-sizing: border-box;
+}
     html,body{
       margin:0; height:100%; background:var(--bg); color:var(--text);
       font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; overflow:hidden;
@@ -22,7 +28,7 @@
       padding:10px; display:flex; gap:8px; align-items:center; border-bottom:1px solid var(--border);
     }
     .brand{ display:flex; align-items:center; gap:10px; padding-right:12px; border-right:1px solid var(--border) }
-    .title{ font-weight:700; letter-spacing:.3px }
+    .title{ font-weight:700; letter-spacing:.3px; font-size:2.0rem; }
     #topbar input,#topbar button,#topbar select{
       background:var(--bg); color:var(--text); border:1px solid var(--border); padding:6px 8px; border-radius:6px;
     }
@@ -31,7 +37,7 @@
     input[type="number"]{ -moz-appearance:textfield }
 
     /* search */
-    .searchwrap{ position:relative; width:340px }
+    .searchwrap{ position:relative; width:400px }
     #search{
       padding-right:28px;
       background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="%239aa4af" viewBox="0 0 24 24"><path d="M9.5 3a6.5 6.5 0 015.2 10.5l4.15 4.15-1.4 1.4-4.15-4.15A6.5 6.5 0 119.5 3zm0 2a4.5 4.5 0 100 9 4.5 4.5 0 000-9z"/></svg>');
@@ -95,7 +101,7 @@
 <body>
   <div id="topbar">
     <div class="brand">
-      <img src="TTX_Company-Logo.wine.png" alt="TTX Logo" style="height:82px;width:auto;object-fit:contain;vertical-align:middle;">
+      <img src="TTX_Company-Logo.wine.png" alt="TTX Logo" style="height:85px;width:auto;object-fit:contain;vertical-align:middle;">
       <span class="title">SQL Atlas 3D</span>
     </div>
     <div class="searchwrap">
@@ -103,7 +109,7 @@
       <div id="sugg" class="sugg hidden"></div>
     </div>
     <label>Radius <input id="radius" type="number" min="0" max="25" value="4" style="width:64px"></label>
-    <input id="file" type="file" accept=".json,application/json" />
+    <input id="file" type="file" accept=".json,application/json" class="rightAlign" />
     <button id="btnDemo">Load Demo</button>
     <span class="muted">DDSMRT</span>
   </div>
