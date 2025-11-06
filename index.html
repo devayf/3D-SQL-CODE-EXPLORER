@@ -157,6 +157,24 @@ input[type="file"]:hover,
   width: 120px;
   accent-color: var(--accent);
 }
+    /* Modern scrollbar for search suggestions (to match sidebar) */
+#sugg {
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: var(--accent) var(--panel); /* thumb and track */
+}
+#sugg::-webkit-scrollbar {
+  width: 8px;
+  background: var(--panel);
+}
+#sugg::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 5px;
+  border: 2px solid var(--panel);
+}
+#sugg::-webkit-scrollbar-track {
+  background: var(--panel);
+  border-radius: 5px;
+}
   </style>
 </head>
 <body>
