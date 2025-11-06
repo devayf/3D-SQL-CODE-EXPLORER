@@ -138,6 +138,25 @@ input[type="file"]:hover,
 #send:hover {
   cursor: pointer;
 }
+.slider-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+#radius-value {
+  min-width: 32px;
+  font-weight: bold;
+  color: var(--accent);
+  background: var(--panel);
+  border-radius: 6px;
+  padding: 2px 8px;
+  border: 1px solid var(--border);
+  margin-left: 4px;
+}
+#radius[type="range"] {
+  width: 120px;
+  accent-color: var(--accent);
+}
   </style>
 </head>
 <body>
@@ -150,7 +169,11 @@ input[type="file"]:hover,
       <input id="search" type="text" placeholder="Search node by name..." autocomplete="on" />
       <div id="sugg" class="sugg hidden"></div>
     </div>
-    <label>Radius <input id="radius" type="number" min="0" max="25" value="4" style="width:64px"></label>
+    <div class="slider-container">
+  <label for="radius">Radius</label>
+  <input id="radius" type="range" min="1" max="25" value="4" />
+  
+</div>
     <input id="file" type="file" accept=".json,application/json" class="rightAlign" />
     <button id="btnDemo">Load Demo</button>
     <span class="muted">DDSMRT</span>
@@ -172,7 +195,7 @@ input[type="file"]:hover,
     <div id="chat">
       <div id="chatlog"></div>
       <div id="chatctl">
-        <textarea id="prompt" placeholder='Copilot Coming Soon!'></textarea>
+        <textarea id="prompt" placeholder='Copilot Coming Soon....'></textarea>
         <button id="send">Ask</button>
       </div>
     </div>
@@ -3433,6 +3456,7 @@ g.d3Force('link')
   .strength(0.25);
 g.d3Force('charge').strength(-180);
 
+
 // ----- Lighting -----
 const scene = g.scene();
 scene.add(new THREE.AmbientLight(0xffffff, 0.9));
@@ -3443,56 +3467,20 @@ scene.add(dir);
 // ----- Labels -----
 let labelsOn = false;
 const btnLabels = document.getElementById('btnLabels');
-const labelFn = n => n.name || n.id;
-const labelDivs = new Map();
 
-function toggleLabels(on) {
-  labelsOn = on;
-  btnLabels.textContent = on ? 'Hide Object Names' : 'Show Object Names';
-  labelDivs.forEach(el => el.remove());
-  labelDivs.clear();
+// Initial button text on page load
+btnLabels.textContent = 'Show Object Names';
 
-  if (on) {
-    const container = g.renderer().domElement.parentElement;
-    g.graphData().nodes.forEach(n => {
-      const el = document.createElement('div');
-      el.textContent = labelFn(n);
-      Object.assign(el.style, {
-        position: 'absolute',
-        color: '#fff',
-        background: 'rgba(20,20,20,0.8)',
-        font: '12px sans-serif',
-        padding: '2px 6px',
-        borderRadius: '4px',
-        pointerEvents: 'none',
-        whiteSpace: 'nowrap',
-        transform: 'translate(-50%,-50%)'
-      });
-      container.appendChild(el);
-      labelDivs.set(n, el);
-    });
-
-    g.onRenderFrame(() => {
-      const camera = g.camera();
-      const renderer = g.renderer();
-      const width = renderer.domElement.clientWidth;
-      const height = renderer.domElement.clientHeight;
-      const vector = new THREE.Vector3();
-      g.graphData().nodes.forEach(n => {
-        const el = labelDivs.get(n);
-        if (!el) return;
-        vector.copy(n.x ? {x:n.x,y:n.y,z:n.z} : {x:0,y:0,z:0});
-        vector.project(camera);
-        el.style.left = `${(vector.x * 0.5 + 0.5) * width}px`;
-        el.style.top  = `${(-vector.y * 0.5 + 0.5) * height}px`;
-        el.style.display = (vector.z < 1) ? 'block' : 'none';
-      });
-    });
+btnLabels.addEventListener('click', () => {
+  labelsOn = !labelsOn;
+  btnLabels.textContent = labelsOn ? 'Hide Object Names' : 'Show Object Names';
+  
+  if (labelsOn) {
+    g.nodeLabel(n => n.name || n.id); // Enable tooltips
   } else {
-    g.onRenderFrame(() => {}); // No overlays
+    g.nodeLabel(() => null); // Disable tooltips
   }
-}
-btnLabels.addEventListener('click', () => toggleLabels(!labelsOn));
+});
 
 // ----- Sidebar Toggle -----
 const handle = document.getElementById('toggleHandle'); 
@@ -3916,12 +3904,6 @@ function resetVisual(){
 }
 document.getElementById('btnReset').addEventListener('click', resetVisual);
 
-// Button: Toggle Labels
-document.getElementById('btnLabels').addEventListener('click', () => {
-  labelsOn = !labelsOn;
-  toggleLabels(labelsOn);
-});
-
 // ---------- init ----------
 (function init(){
   document.getElementById('radius').value = 4;
@@ -3929,5 +3911,20 @@ document.getElementById('btnLabels').addEventListener('click', () => {
   loadTTXDemo();
 })();
   </script>
+const radiusSlider = document.getElementById('radius');
+const radiusValue = document.getElementById('radius-value');
+// On slider change, update display and trigger your code as usual
+radiusSlider.addEventListener('input', function() {
+  radiusValue.textContent = radiusSlider.value;
+  // Any logic you already have for reacting to radius changes should stay here
+  // Example:
+  // updateGraphRadius(radiusSlider.value);
+});
+// On page load, initialize display and radius (for code expecting it "at load")
+window.addEventListener('DOMContentLoaded', function() {
+  radiusValue.textContent = radiusSlider.value;
+  // If you have auto-load logic for graph using radius at startup, call it here
+  // updateGraphRadius(radiusSlider.value);
+});
 </body>
 </html>
