@@ -3495,10 +3495,10 @@ function toggleLabels(on) {
 btnLabels.addEventListener('click', () => toggleLabels(!labelsOn));
 
 // ----- Sidebar Toggle -----
-const handle = document.getElementById('toggleHandle');
+const handle = document.getElementById('toggleHandle'); 
 const collapseKey = 'sidebar-collapsed';
 function setHandleIcon() {
-  handle.textContent = document.body.classList.contains('sidebar-collapsed') ? '▸' : '◂';
+  handle.textContent = document.body.classList.contains('sidebar-collapsed') ? '◂' : '▸';
 }
 function fitGraph() { try { g.zoomToFit(400, 60); } catch(_) {} }
 if (localStorage.getItem(collapseKey) === '1') document.body.classList.add('sidebar-collapsed');
