@@ -5,196 +5,511 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>TTX — SQL Neural Explorer</title>
   <style>
-    :root{
-      --bg:#0b0f14; --panel:#0e141c; --accent:#f2c200; --muted:#9aa4af; --border:#223; --text:#e6e6e6;
-      --sidebar-w:560px;
-         .rightAlign {
-  margin-left: auto;
+:root{
+  --bg:#f6f7f8;
+  --panel:#ffffff;
+  --muted:#6b7280;
+  --accent:#0071e3;
+  --border:rgba(15,23,42,0.10);
+  --shadow:0 8px 24px rgba(15,23,42,0.08);
+  --radius:14px;
+  --sidebar-w:420px;
+  --text:#0f1724;
+  font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',Roboto,Helvetica,Arial,sans-serif;
 }
-    }
-    #search {
+
+/* Base */
+html,body{
+  margin:0;
+  height:100%;
+  background:linear-gradient(180deg,var(--bg),#eef2f5);
+  color:var(--text);
+  font-family:inherit;
+  overflow:hidden;
+}
+
+/* Top bar */
+#topbar{
+  position:fixed;
+  top:0; left:0; right:0;
+  z-index:20;
+  padding:16px 24px;
+  display:flex;
+  gap:14px;
+  align-items:center;
+  backdrop-filter:blur(14px);
+  background:linear-gradient(180deg,rgba(255,255,255,0.96),rgba(246,247,248,0.98));
+  box-shadow:0 4px 14px rgba(15,23,42,0.06);
+  border-bottom:1px solid rgba(15,23,42,0.06);
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding-right:16px;
+  border-right:1px solid rgba(15,23,42,0.06);
+}
+.brand img{
+  height:38px;
+  width:auto;
+  object-fit:contain;
+  display:block;
+}
+.title{
+  font-weight:600;
+  letter-spacing:.2px;
+  font-size:18px;
+  color:#0b1220;
+}
+.muted{
+  color:var(--muted);
+  font-size:12px;
+}
+
+/* Search */
+.searchwrap{
+  position:relative;
+  width:360px;
+  max-width:40vw;
+}
+#search {
   width: 100%;
   box-sizing: border-box;
-}
-    html,body{
-      margin:0; height:100%; background:var(--bg); color:var(--text);
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; overflow:hidden;
-    }
-
-    /* top bar */
-    #topbar{
-      position:fixed; top:0; left:0; right:0; z-index:10;
-      background:linear-gradient(90deg,#121821,#121821 70%,#1a2130);
-      padding:10px; display:flex; gap:8px; align-items:center; border-bottom:1px solid var(--border);
-    }
-    .brand{ display:flex; align-items:center; gap:10px; padding-right:12px; border-right:1px solid var(--border) }
-    .title{ font-weight:700; letter-spacing:.3px; font-size:.8rem; }
-    #topbar input,#topbar button,#topbar select{
-      background:var(--bg); color:var(--text); border:1px solid var(--border); padding:6px 8px; border-radius:6px;
-    }
-    input[type="number"]::-webkit-outer-spin-button,
-    input[type="number"]::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0 }
-    input[type="number"]{ -moz-appearance:textfield }
-
-    /* search */
-    .searchwrap{ position:relative; width:350px }
-    #search{
-      padding-right:28px;
-      background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="%239aa4af" viewBox="0 0 24 24"><path d="M9.5 3a6.5 6.5 0 015.2 10.5l4.15 4.15-1.4 1.4-4.15-4.15A6.5 6.5 0 119.5 3zm0 2a4.5 4.5 0 100 9 4.5 4.5 0 000-9z"/></svg>');
-      background-repeat:no-repeat; background-position:right 8px center;
-    }
-    .sugg{ position:absolute; left:0; right:0; top:calc(100% + 4px); background:var(--panel); border:1px solid var(--border);
-           border-radius:8px; max-height:260px; overflow:auto; box-shadow:0 10px 30px rgba(0,0,0,.35); z-index:12 }
-    .sugg.hidden{ display:none }
-    .sugg .item{ padding:8px 10px; font-size:14px; cursor:pointer; display:flex; justify-content:space-between; gap:8px }
-    .sugg .item:hover{ background:#0b0f14 }
-    .sugg .type{ color:var(--muted); font-size:12px }
-
-    /* canvas + collapsible sidebar */
-    #canvas{ position:absolute; top:52px; bottom:0; left:0; right:var(--sidebar-w); transition:right .25s ease }
-    #sidebar{ position:fixed; top:52px; right:0; bottom:0; width:var(--sidebar-w); background:var(--panel);
-              border-left:1px solid var(--border); display:grid; grid-template-rows:1fr auto;
-              transform:translateX(0); transition:transform .25s ease }
-    body.sidebar-collapsed #sidebar{ transform:translateX(var(--sidebar-w)) }
-    body.sidebar-collapsed #canvas{ right:0 }
-
-    #toggleHandle{
-  position:fixed; top:50%; right:var(--sidebar-w); transform:translateY(-50%);
-  background:var(--panel); color:var(--text); border:1px solid var(--border); border-right:none;
-  padding:16px 18px;      /* bigger padding for a larger clickable area */
-  font-size:1.6em;        /* make icon/text bigger */
-  border-radius:12px 0 0 12px; /* optionally round more */
-  cursor:pointer; z-index:11; line-height:1;
-}
-body.sidebar-collapsed #toggleHandle{ 
-  right:0; 
-  border-right:1px solid var(--border); 
-  border-left:none; 
-  border-radius:12px 0 0 12px;  /* match new corner radius */
+  padding: 10px 32px 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(15,23,42,0.06);
+  background: linear-gradient(#ffffff, #fbfdff);
+  box-shadow: var(--shadow);
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--text);
+  outline: none;
 }
 
-    #inspector{ padding:12px; border-bottom:1px solid var(--border); overflow:auto; min-height:0 }
-    #details{ color:var(--muted); font-size:13px }
-    #details pre{ overflow-wrap:anywhere; white-space:pre-wrap; background:#0b0f14; border:1px solid var(--border); border-radius:6px; padding:8px }
+#search::placeholder {
+  color: #9ca3af;
+}
 
-    #chat{ display:grid; grid-template-rows:1fr auto; height:100% }
-    #chatlog{ padding:12px; overflow:auto }
-    .chat-msg{ margin-bottom:10px }
-    .chat-role{ font-size:12px; color:var(--muted) }
-    .chat-bubble{ background:#0b0f14; border:1px solid var(--border); padding:8px; border-radius:8px; margin-top:4px; white-space:pre-wrap }
-    #chatctl{ padding:10px; border-top:1px solid var(--border); display:grid; grid-template-columns:1fr auto; gap:8px }
-    #prompt{ background:#0b0f14; color:var(--text); border:1px solid var(--border); border-radius:8px; padding:8px; min-height:56px }
-    #send{ background:var(--accent); color:#111; border:0; padding:10px 14px; border-radius:8px; font-weight:700 }
+/* Suggestions dropdown, deduplicated */
+.sugg {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  min-width: 100%;
+  width: max-content;                /* For JS autofit, else defaults to 100% */
+  max-width: 90vw;
+  box-sizing: border-box;
+  background: var(--panel);
+  border: 1px solid rgba(15,23,42,0.08);
+  border-radius: 12px;
+  max-height: 260px;
+  overflow-y: auto;
+  overflow-x: auto;                  /* Enables horizontal scrollbar if needed */
+  box-shadow: 0 14px 40px rgba(15,23,42,0.14);
+  z-index: 22;
+  font-size: 13px;
+  line-height: 1.4;
+  padding-right: 12px;
+  padding-bottom: 4px;
+  scrollbar-width: thin;             /* Firefox slim scrollbar */
+  scrollbar-color: #c5cad1 #fff;     /* Firefox thumb/track colors */
+}
 
-    .muted{ color:var(--muted) }
-    .pill{ display:inline-block; padding:2px 6px; border-radius:999px; border:1px solid var(--border); font-size:12px; margin-right:6px }
-    .legend .pill{ margin-top:4px }
+.sugg.hidden {
+  display: none;
+}
 
-    /* reset button */
-    #btnReset{
-      position:fixed; left:12px; bottom:12px; z-index:12;
-      background:var(--panel); color:var(--text); border:1px solid var(--border);
-      padding:8px 10px; border-radius:8px;
-    }
-    #btnReset:hover{ filter:brightness(1.1); cursor:pointer }
+.sugg .item {
+  padding: 10px 12px;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  word-break: break-word;
+}
+
+.sugg .item:hover {
+  background: #f9fafb;
+}
+
+.sugg .type {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+/* Slimmest possible scrollbar for Webkit browsers */
+.sugg::-webkit-scrollbar {
+  width: 2px;
+  height: 2px;
+}
+
+.sugg::-webkit-scrollbar-thumb {
+  background: #c5cad1;
+  border-radius: 999px;
+  border: none;
+}
+
+.sugg::-webkit-scrollbar-track {
+  background: #fff;
+  border-radius: 999px;
+}
+
+/* Radius slider */
+.slider-container{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:12px;
+  color:var(--muted);
+}
+#radius[type="range"]{
+  background:transparent;
+  border:none;
+  box-shadow:none;
+  padding:0;
+  accent-color:var(--accent);
+  width:120px;
+}
+
+/* Topbar controls */
+#topbar input[type="file"],
+#topbar button,
+#topbar select{
+  font-family:inherit;
+  font-size:13px;
+  border-radius:10px;
+  border:1px solid rgba(15,23,42,0.06);
+  background:linear-gradient(#ffffff,#fbfdff);
+  color:var(--text);
+  padding:8px 10px;
+  box-shadow:var(--shadow);
+}
+#topbar button{
+  cursor:pointer;
+  font-weight:500;
+}
+#btnDemo{
+  background:transparent;
+  color:var(--muted);
+  box-shadow:none;
+  border:1px solid rgba(15,23,42,0.08);
+}
+#btnDemo:hover{
+  background:#f3f4f6;
+}
+#file{
+  background:var(--panel);
+}
+.rightAlign{
+  margin-left:auto;
+}
+
+/* Canvas */
+#canvas{
+  position:absolute;
+  top:88px;
+  bottom:24px;
+  left:24px;
+  right:var(--sidebar-w);
+  margin:0;
+  background:linear-gradient(180deg,#fafbfc,#ffffff);
+  border-radius:16px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+  transition:right .25s ease,left .25s ease;
+}
+
+/* Sidebar layout */
+#sidebar{
+  position:fixed;
+  top:88px;
+  right:0;
+  bottom:24px;
+  width:var(--sidebar-w);
+  background:transparent;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  border-left:1px solid rgba(15,23,42,0.06);
+  box-shadow:-4px 0 16px rgba(15,23,42,0.04);
+  padding:0 16px 16px 16px;
+  box-sizing:border-box;
+  overflow:hidden;
+}
+
+/* Inspector (upper panel) */
+#inspector{
+  background:var(--panel);
+  border-radius:var(--radius);
+  padding:12px;
+  box-shadow:var(--shadow);
+  border:1px solid rgba(15,23,42,0.04);
+  flex:1 1 75%;
+  overflow:auto;
+  min-height:0;
+}
+#title{
+  margin:10px 0 6px 0;
+  font-size:14px;
+  font-weight:600;
+  color:#111827;
+}
+#details{
+  color:var(--muted);
+  font-size:12px;
+}
+#details pre{
+  overflow-wrap:anywhere;
+  white-space:pre-wrap;
+  background:#f9fafb;
+  border:1px solid rgba(15,23,42,0.06);
+  border-radius:8px;
+  padding:8px;
+  font-size:11px;
+}
+.legend .pill{
+  display:inline-block;
+  padding:3px 8px;
+  border-radius:999px;
+  border:1px solid rgba(148,163,253,0.18);
+  font-size:10px;
+  color:var(--muted);
+  margin:0 4px 4px 0;
+  background:#f9fafb;
+}
+
+/* Chat (lower panel) */
+#chat{
+  background:var(--panel);
+  border-radius:var(--radius);
+  padding:12px;
+  box-shadow:var(--shadow);
+  border:1px solid rgba(15,23,42,0.04);
+  flex:0 0 25%;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  min-height:0;
+}
+
+/* Chat log auto-resizing */
+#chatlog{
+  background:var(--panel);
+  border-radius:var(--radius);
+  padding:4px;
+  margin:0;
+  box-shadow:var(--shadow);
+  border:1px solid rgba(15,23,42,0.04);
+  font-size:11px;
+  color:var(--muted);
+  flex:1 1 auto;
+  overflow-y:auto;
+  box-sizing:border-box;
+  white-space:pre-line;
+}
+.chat-msg{
+  margin-bottom:8px;
+}
+.chat-role{
+  font-size:10px;
+  color:var(--muted);
+}
+.chat-bubble{
+  background:#f9fafb;
+  border:1px solid rgba(15,23,42,0.06);
+  padding:6px;
+  border-radius:8px;
+  margin-top:2px;
+  white-space:pre-wrap;
+  font-size:11px;
+}
+
+/* Prompt + send row pinned at bottom */
+#chatctl{
+  padding:0;
+  border-top:0;
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:6px;
+  align-items:flex-end;
+  flex:0 0 auto;
+}
+#prompt{
+  background:#f9fafb;
+  color:var(--text);
+  border:1px solid rgba(15,23,42,0.08);
+  border-radius:10px;
+  padding:8px;
+  min-height:52px;
+  max-height:52px;
+  font-size:11px;
+  resize:none !important;
+  overflow-y:auto;
+  margin:0;
+  width:100%;
+  box-sizing:border-box;
+}
+#send{
+  background:linear-gradient(180deg,var(--accent),#0060c8);
+  color:#ffffff;
+  border:0;
+  padding:9px 14px;
+  border-radius:10px;
+  font-weight:600;
+  font-size:11px;
+  cursor:pointer;
+  box-shadow:0 6px 18px rgba(3,102,214,0.16);
+  height:50px;
+}
+#send:hover{
+  filter:brightness(1.03);
+}
+
+/* Sidebar toggle handle */
+#toggleHandle{
+  position:fixed;
+  top:50%;
+  right:var(--sidebar-w);
+  transform:translateY(-50%);
+  background:var(--panel);
+  color:var(--muted);
+  border:1px solid rgba(148,163,253,0.4);
+  border-right:none;
+  padding:16px 10px;
+  font-size:1.4em;
+  border-radius:12px 0 0 12px;
+  cursor:pointer;
+  z-index:21;
+  box-shadow:var(--shadow);
+  line-height:1;
+}
+#toggleHandle:hover{
+  opacity:1;
+}
+
+/* Collapsed sidebar */
+body.sidebar-collapsed #sidebar{
+  transform:translateX(var(--sidebar-w));
+}
+body.sidebar-collapsed #canvas{
+  left:24px;
+  right:24px !important;
+}
+body.sidebar-collapsed #toggleHandle{
+  right:0;
+  border-right:1px solid rgba(148,163,253,0.4);
+  border-left:none;
+  border-radius:0 12px 12px 0;
+  transform:translateY(-50%) rotate(180deg);
+}
+
+/* Reset + label buttons */
+#btnReset,
 #btnLabels{
-  position:fixed; left:75px; bottom:12px; z-index:12;
-  background:var(--panel); color:var(--text); border:1px solid var(--border);
-  padding:8px 10px; border-radius:8px;
+  position:fixed;
+  bottom:40px;
+  z-index:20;
+  background:var(--panel);
+  color:var(--muted);
+  border:1px solid rgba(15,23,42,0.08);
+  padding:7px 10px;
+  border-radius:10px;
+  font-size:11px;
+  box-shadow:var(--shadow);
+  cursor:pointer;
 }
-#btnLabels:hover{ filter:brightness(1.1); cursor:pointer }
-/* Modern scrollbar for sidebar and chat */
-#sidebar, #chatlog, #inspector {
-  scrollbar-width: thin;           /* For Firefox */
-  scrollbar-color: var(--accent) var(--panel); /* For Firefox */
+#btnReset{ left:32px; }
+#btnLabels{ left:90px; }
+#btnReset:hover,
+#btnLabels:hover{
+  background:#f3f4f6;
 }
 
-/* For Chrome/Safari/Edge */
+/* Scrollbars: uniform grey */
+#sidebar,
+#chatlog,
+#inspector{
+  scrollbar-width:thin;
+  scrollbar-color:#9aa4af var(--panel);
+}
 #sidebar::-webkit-scrollbar,
 #chatlog::-webkit-scrollbar,
-#inspector::-webkit-scrollbar {
-  width: 8px;
-  background: var(--panel);
+#inspector::-webkit-scrollbar{
+  width:8px;
+height: 6px;
 }
 #sidebar::-webkit-scrollbar-thumb,
 #chatlog::-webkit-scrollbar-thumb,
-#inspector::-webkit-scrollbar-thumb {
-  background: var(--accent);
-  border-radius: 5px;
-  border: 2px solid var(--panel);
+#inspector::-webkit-scrollbar-thumb{
+  background:#9aa4af;
+  border-radius:999px;
+  border:2px solid var(--panel);
 }
 #sidebar::-webkit-scrollbar-track,
 #chatlog::-webkit-scrollbar-track,
-#inspector::-webkit-scrollbar-track {
-  background: var(--panel);
-  border-radius: 5px;
+#inspector::-webkit-scrollbar-track{
+  background:var(--panel);
+  border-radius:6px;
 }
-input[type="file"]:hover,
-#btnDemo:hover {
-  cursor: pointer;
+
+/* Responsive */
+@media (max-width:1024px){
+  :root{ --sidebar-w:320px; }
+  #canvas{
+    right:var(--sidebar-w);
+    left:16px;
+  }
+  #sidebar{
+    padding:0 10px 10px 10px;
+  }
+  #btnReset{ left:16px; }
+  #btnLabels{ left:108px; }
 }
-input[type="file"]:hover,
-#btnDemo:hover,
-#send:hover {
-  cursor: pointer;
+@media (max-width:768px){
+  #topbar{
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .searchwrap{
+    order:3;
+    width:100%;
+    max-width:100%;
+  }
+  #canvas{
+    top:96px;
+    left:8px;
+    right:8px;
+    bottom:72px;
+  }
+  #sidebar,
+  #toggleHandle{
+    display:none;
+  }
+  #btnReset{ left:12px; }
+  #btnLabels{ left:104px; }
 }
-.slider-container {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-#radius-value {
-  min-width: 32px;
-  font-weight: bold;
-  color: var(--accent);
-  background: var(--panel);
-  border-radius: 6px;
-  padding: 2px 8px;
-  border: 1px solid var(--border);
-  margin-left: 4px;
-}
-#radius[type="range"] {
-  width: 120px;
-  accent-color: var(--accent);
-}
-    /* Modern scrollbar for search suggestions (to match sidebar) */
-#sugg {
-  scrollbar-width: thin; /* Firefox */
-  scrollbar-color: var(--accent) var(--panel); /* thumb and track */
-}
-#sugg::-webkit-scrollbar {
-  width: 8px;
-  background: var(--panel);
-}
-#sugg::-webkit-scrollbar-thumb {
-  background: var(--accent);
-  border-radius: 5px;
-  border: 2px solid var(--panel);
-}
-#sugg::-webkit-scrollbar-track {
-  background: var(--panel);
-  border-radius: 5px;
-}
-    #chat, #chatlog, #prompt {
-  resize: none !important;
-}
-  </style>
+</style>
 </head>
 <body>
   <div id="topbar">
     <div class="brand">
-      <img src="TTX_Company-Logo.wine.png" alt="TTX Logo" style="height:75px;width:auto;object-fit:contain;vertical-align:middle;">
+      <img src="TTX_Company-Logo.wine.png" alt="TTX Logo">
       <span class="title">SQL Neural Explorer</span>
     </div>
+
     <div class="searchwrap">
       <input id="search" type="text" placeholder="Search table by name..." autocomplete="on" />
       <div id="sugg" class="sugg hidden"></div>
     </div>
+
     <div class="slider-container">
-  <label for="radius">Neighborhood</label>
-  <input id="radius" type="range" min="1" max="10" value="4" />
-  
-</div>
+      <label for="radius">Neighborhood</label>
+      <input id="radius" type="range" min="1" max="10" value="4" />
+    </div>
+
     <input id="file" type="file" accept=".json,application/json" class="rightAlign" />
     <button id="btnDemo">Load Demo</button>
     <span class="muted">DDSMRT</span>
@@ -209,14 +524,14 @@ input[type="file"]:hover,
         <span class="pill">Color = type</span>
         <span class="pill">Links = deps</span>
       </div>
-      <h3 id="title" style="margin:10px 0 6px 0;">Details</h3>
+      <h3 id="title">Details</h3>
       <div id="details" class="muted">Load a JSON model or the demo. Select a node to view SQL.</div>
     </div>
 
     <div id="chat">
       <div id="chatlog"></div>
       <div id="chatctl">
-        <textarea id="prompt" placeholder='Copilot Coming Soon....'></textarea>
+        <textarea id="prompt" placeholder="Copilot Coming Soon...."></textarea>
         <button id="send">Ask</button>
       </div>
     </div>
@@ -3417,129 +3732,134 @@ input[type="file"]:hover,
 }  </script>
 
   <script>
-// ---------- state ----------
-let fullData = { nodes: [], links: [] };
-let currentRoot = null;
-let searchIndex = [];
-let lastLoad = {
-  data: null,
-  mode: 'demo',
-  view: 'neighborhood',
-  radius: 4,
-  startId: null
-};
+    // ---------- state ----------
+    let fullData = { nodes: [], links: [] };
+    let currentRoot = null;
+    let searchIndex = [];
+    let lastLoad = {
+      data: null,
+      mode: 'demo',
+      view: 'neighborhood',
+      radius: 4,
+      startId: null
+    };
 
-// ---------- graph ----------
-const g = ForceGraph3D()(document.getElementById('canvas'))
-  .backgroundColor('#0b0f14')
-  .nodeAutoColorBy('type')
-  .nodeLabel(n => n.name || n.id)
-  .nodeVal(n => Math.max(2, Math.min(10, 2 + (n.degree || 0) * 0.4)))
-  .nodeRelSize(6)
-  .linkColor(() => '#888')
-  .linkOpacity(0.6)
-  .enableNodeDrag(false)
-  .showNavInfo(false)
-  .onNodeClick(node => {
-    currentRoot = node.id;
-    showDetails(node);
-    renderNeighborhood(node.id, getRadius());
-  });
-g.d3Force('charge').strength(-180);
+    const GRAPH_SHIFT_X =520;  // <-- Amount to shift graph horizontally
 
-// ----- Camera and Controls -----
-const camera = g.camera();
-const controls = g.controls();
-camera.far = 10000;
-camera.updateProjectionMatrix();
-controls.minDistance = 1;
-controls.maxDistance = 10000;
-controls.enableDamping = true;
-controls.dampingFactor = 0.05;
-controls.enablePan = true;
-controls.minPolarAngle = 0;
-controls.maxPolarAngle = Math.PI;
+    // ---------- graph ----------
+    const g = ForceGraph3D()(document.getElementById('canvas'))
+      .backgroundColor('#0b0f14')
+      .nodeAutoColorBy('type')
+      .nodeLabel(n => n.name || n.id)
+      .nodeVal(n => Math.max(2, Math.min(10, 2 + (n.degree || 0) * 0.4)))
+      .nodeRelSize(6)
+      .linkColor(() => '#888')
+      .linkOpacity(0.6)
+      .enableNodeDrag(false)
+      .showNavInfo(false)
+      .onNodeClick(node => {
+        currentRoot = node.id;
+        showDetails(node);
+        renderNeighborhood(node.id, getRadius());
+      });
+    g.d3Force('charge').strength(-180);
 
-// ----- Node Render -----
-const colorByType = t => ({ Table:'#4aa3ff', View:'#9b59b6', Proc:'#f1c40f' }[t] || '#9aa4af');
-g.nodeThreeObject(n => {
-  const s = Math.max(2, Math.min(10, 2 + (n.degree || 0) * 0.4));
-  const geom = new THREE.SphereGeometry(s, 24, 24);
-  const mat  = new THREE.MeshStandardMaterial({ color: colorByType(n.type), roughness: 0.6, metalness: 0.1 });
-  return new THREE.Mesh(geom, mat);
-});
-g.nodeThreeObjectExtend(false);
+    // ----- Camera and Controls -----
+    const camera = g.camera();
+    const controls = g.controls();
+    camera.far = 10000;
+    camera.updateProjectionMatrix();
+    controls.minDistance = 1;
+    controls.maxDistance = 10000;
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+    controls.enablePan = true;
+    controls.minPolarAngle = 0;
+    controls.maxPolarAngle = Math.PI;
 
-// ----- Graph Forces -----
-g.cooldownTicks(400).cooldownTime(16000).d3VelocityDecay(0.18);
-g.d3Force('link')
-  .distance(l => 70 + 3 * Math.sqrt((l.source.degree || 0) + (l.target.degree || 0)))
-  .strength(0.25);
-g.d3Force('charge').strength(-180);
+    // --- Graph shifting helper ---
+    function shiftGraphForSidebar() {
+      // Sidebar is open if NO .sidebar-collapsed class
+      const isSidebarOpen = !document.body.classList.contains('sidebar-collapsed');
+      // If open, shift by GRAPH_SHIFT_X; if collapsed, X = 0
+      const x = isSidebarOpen ? GRAPH_SHIFT_X : 0;
+      g.cameraPosition({ x: x, y: camera.position.y, z: camera.position.z }, undefined, 600);
+    }
 
+    // ----- Node Render -----
+    const colorByType = t => ({ Table:'#4aa3ff', View:'#9b59b6', Proc:'#f1c40f' }[t] || '#9aa4af');
+    g.nodeThreeObject(n => {
+      const s = Math.max(2, Math.min(10, 2 + (n.degree || 0) * 0.4));
+      const geom = new THREE.SphereGeometry(s, 24, 24);
+      const mat  = new THREE.MeshStandardMaterial({ color: colorByType(n.type), roughness: 0.6, metalness: 0.1 });
+      return new THREE.Mesh(geom, mat);
+    });
+    g.nodeThreeObjectExtend(false);
 
-// ----- Lighting -----
-const scene = g.scene();
-scene.add(new THREE.AmbientLight(0xffffff, 0.9));
-const dir = new THREE.DirectionalLight(0xffffff, 0.7);
-dir.position.set(80, 80, 80);
-scene.add(dir);
+    // ----- Graph Forces -----
+    g.cooldownTicks(400).cooldownTime(16000).d3VelocityDecay(0.18);
+    g.d3Force('link')
+      .distance(l => 70 + 3 * Math.sqrt((l.source.degree || 0) + (l.target.degree || 0)))
+      .strength(0.25);
+    g.d3Force('charge').strength(-180);
 
-// ----- Labels -----
-let labelsOn = false;
-const btnLabels = document.getElementById('btnLabels');
+    // ----- Lighting -----
+    const scene = g.scene();
+    scene.add(new THREE.AmbientLight(0xffffff, 0.9));
+    const dir = new THREE.DirectionalLight(0xffffff, 0.7);
+    dir.position.set(80, 80, 80);
+    scene.add(dir);
 
-// Initial button text on page load
-btnLabels.textContent = 'Show Object Names';
+    // ----- Labels -----
+    let labelsOn = false;
+    const btnLabels = document.getElementById('btnLabels');
+    btnLabels.textContent = 'Show Object Names';
+    btnLabels.addEventListener('click', () => {
+      labelsOn = !labelsOn;
+      btnLabels.textContent = labelsOn ? 'Hide Object Names' : 'Show Object Names';
+      if (labelsOn) {
+        g.nodeLabel(n => n.name || n.id);
+      } else {
+        g.nodeLabel(() => null);
+      }
+    });
 
-btnLabels.addEventListener('click', () => {
-  labelsOn = !labelsOn;
-  btnLabels.textContent = labelsOn ? 'Hide Object Names' : 'Show Object Names';
-  
-  if (labelsOn) {
-    g.nodeLabel(n => n.name || n.id); // Enable tooltips
-  } else {
-    g.nodeLabel(() => null); // Disable tooltips
-  }
-});
+    // ----- Sidebar Toggle -----
+    const handle = document.getElementById('toggleHandle'); 
+    const collapseKey = 'sidebar-collapsed';
+    function setHandleIcon() { handle.textContent = document.body.classList.contains('sidebar-collapsed') ? '▸' : '▸'; }
+    function fitGraph() { try { g.zoomToFit(400, 60); } catch(_) {} }
+    if (localStorage.getItem(collapseKey) === '1') document.body.classList.add('sidebar-collapsed');
+    setHandleIcon();
+    setTimeout(() => { window.dispatchEvent(new Event('resize')); fitGraph(); }, 80);
 
-// ----- Sidebar Toggle -----
-const handle = document.getElementById('toggleHandle'); 
-const collapseKey = 'sidebar-collapsed';
-function setHandleIcon() {
-  handle.textContent = document.body.classList.contains('sidebar-collapsed') ? '◂' : '▸';
-}
-function fitGraph() { try { g.zoomToFit(400, 60); } catch(_) {} }
-if (localStorage.getItem(collapseKey) === '1') document.body.classList.add('sidebar-collapsed');
-setHandleIcon();
-setTimeout(() => { window.dispatchEvent(new Event('resize')); fitGraph(); }, 80);
+    handle.addEventListener('click', () => {
+      const willOpen = document.body.classList.contains('sidebar-collapsed');
+      document.body.classList.toggle('sidebar-collapsed');
+      localStorage.setItem(collapseKey, document.body.classList.contains('sidebar-collapsed') ? '1':'0');
+      setHandleIcon();
+      setTimeout(() => {
+        window.dispatchEvent(new Event('resize'));
+        shiftGraphForSidebar();
+      }, 270); // tiny delay for layout
+    });
 
-handle.addEventListener('click', () => {
-  const willOpen = document.body.classList.contains('sidebar-collapsed');
-  document.body.classList.toggle('sidebar-collapsed');
-  localStorage.setItem(collapseKey, document.body.classList.contains('sidebar-collapsed') ? '1':'0');
-  setHandleIcon();
-  setTimeout(() => {
-    window.dispatchEvent(new Event('resize'));
-  }, 260);
-});
-
-// ----- File Loader -----
-document.getElementById('file').addEventListener('change', async (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-  try {
-    const text = await file.text();
-    const json = JSON.parse(text);
-    loadGraph(json);
-    lastLoad = { data: JSON.parse(JSON.stringify(fullData)), mode:'file', view:'full', radius:getRadius(), startId: fullData.nodes[0]?.id || null };
-    afterLoad({ full:true });
-    logSys(`Model loaded: ${fullData.nodes.length} nodes, ${fullData.links.length} links.`);
-  } catch (err) {
-    console.error(err);
-    logSys('Invalid JSON file.');
-  }
-});
+    // ----- File Loader -----
+    document.getElementById('file').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      try {
+        const text = await file.text();
+        const json = JSON.parse(text);
+        loadGraph(json);
+        lastLoad = { data: JSON.parse(JSON.stringify(fullData)), mode:'file', view:'full', radius:getRadius(), startId: fullData.nodes[0]?.id || null };
+        afterLoad({ full:true });
+        logSys(`Model loaded: ${fullData.nodes.length} nodes, ${fullData.links.length} links.`);
+      } catch (err) {
+        console.error(err);
+        logSys('Invalid JSON file.');
+      }
+    });
 
 // ----- Demo Loader -----
 function loadTTXDemo() {
@@ -3925,27 +4245,14 @@ function resetVisual(){
 }
 document.getElementById('btnReset').addEventListener('click', resetVisual);
 
-// ---------- init ----------
-(function init(){
-  document.getElementById('radius').value = 4;
-  g.graphData({ nodes: [], links: [] });
-  loadTTXDemo();
-})();
+    // ---------- init ----------
+    (function init(){
+      const radius = document.getElementById('radius');
+      if (radius) radius.value = 4;
+      g.graphData({ nodes: [], links: [] });
+      loadTTXDemo();
+      shiftGraphForSidebar(); // <-- Shift graph initially based on sidebar state
+    })();
   </script>
-const radiusSlider = document.getElementById('radius');
-const radiusValue = document.getElementById('radius-value');
-// On slider change, update display and trigger your code as usual
-radiusSlider.addEventListener('input', function() {
-  radiusValue.textContent = radiusSlider.value;
-  // Any logic you already have for reacting to radius changes should stay here
-  // Example:
-  // updateGraphRadius(radiusSlider.value);
-});
-// On page load, initialize display and radius (for code expecting it "at load")
-window.addEventListener('DOMContentLoaded', function() {
-  radiusValue.textContent = radiusSlider.value;
-  // If you have auto-load logic for graph using radius at startup, call it here
-  // updateGraphRadius(radiusSlider.value);
-});
 </body>
 </html>
